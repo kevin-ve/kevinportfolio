@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>professional cv generator</title>
+    <style>
+        body {
+            background-color: gray;
+            padding: 0px;
+            font-family: Arial, sans-serif;
+        }
+
+        .form-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 1px 1px 10px 1px black;
+            background: rgb(28, 27, 61);
+            padding: 30px;
+            padding-top: 0px;
+
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            color: white;
+            font-weight: 800;
+        }
+        h2{
+            color: aliceblue;
+            align-items: center;
+            text-align: center;
+        }
+        label {
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        input,
+        select {
+            border-radius: 4px;
+            width: 100%;
+            height: 18px;
+            padding: 8px;
+            border: none;
+            box-shadow: 1px 1px 10px 1px black;
+
+        }
+
+        .bn-conainer {
+            margin-top: 20px;
+            margin-left: 90%;
+        }
+        button{
+            color: aliceblue;
+            background-color: green;
+            border: none;
+            border-radius: 12px;
+            width: 70px;
+            height: 20px;
+            font-weight: 900;
+            box-shadow: 1px 1px 10px 1px black;
+        }
+        button:hover{
+            background-color: white;
+            color: green;
+            box-shadow: 1px 1px 10px 1px rgb(170, 212, 121);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-card">
+        <div class="step-1">
+
+            <h2>STEP1: PERSONAL IDENTIFICATION</h2>
+            <div class="form-group">
+                <label for="">Full names :</label>
+                <input type="text" id="names" placeholder="enter your full names">
+            </div>
+            <div class="form-group">
+                <label for="">Father's names:</label>
+                <input type="text" id="father" placeholder="enter your father's names">
+            </div>
+            <div class="form-group">
+                <label for="">Mother's names:</label>
+                <input type="text" id="mother" placeholder="enter your mother's names">
+            </div>
+            <div class="form-group">
+                <label for="">Nationality:</label>
+                <input type="text" id="nationality" placeholder="enter your mother's names">
+            </div>
+            <div class="form-group">
+                <label for="">national id:</label>
+                <input type="number" id="nationalid" placeholder="enter your mother's names">
+            </div>
+            <div class="form-group">
+                <label for="">sex:</label>
+                <select id="sex">
+                    <option value="male">male</option>
+                    <option value="female">female</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>date of birth</label>
+                <input type="date" id="dob">
+            </div>
+            <div class="form-group">
+                <label for="">place of residence:</label>
+                <input type="text" id="por" placeholder="enter your residence district">
+            </div>
+            <div class="form-group">
+                <label for="">EMAIL:</label>
+                <input type="email" id="email" placeholder="enter your full names">
+            </div>
+            <div class="form-group">
+                <label for="">linkedin:</label>
+                <input type="text" id="linkedin" placeholder="enter your linkedin link">
+            </div>
+            <div class="form-group">
+                <label for="">phonenumber:</label>
+                <input type="text" id="phone" placeholder="enter your phone number">
+            </div>
+            <div class="bn-conainer">
+                <button onclick="nextToStep2()">Next</button>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    function nextToStep2() {
+        const nameValue = document.getElementById('names').value;
+        if (!nameValue) {
+            alert("please enter your names to proceed");
+            return;
+        }
+        alert("step 1 saved successfully! ready for step 2")
+    }
+</script>
+
+</html>

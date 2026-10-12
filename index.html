@@ -1,1144 +1,155 @@
 <!DOCTYPE html>
-<html lang="en" class="dark scroll-smooth">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alex Rivera | Senior Full-Stack Engineer & Designer</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        darkBg: '#090d16',
-                        darkCard: 'rgba(15, 23, 42, 0.65)',
-                        neonCyan: '#06b6d4',
-                        neonPurple: '#8b5cf6',
-                        neonEmerald: '#10b981',
-                        matrixGreen: '#00ff66'
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['Fira Code', 'monospace']
-                    },
-                    animation: {
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'float': 'float 6s ease-in-out infinite',
-                        'glow': 'glow 3s ease-in-out infinite alternate',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0px)' },
-                            '50%': { transform: 'translateY(-10px)' },
-                        },
-                        glow: {
-                            '0%': { boxShadow: '0 0 15px rgba(6, 182, 212, 0.3)' },
-                            '100%': { boxShadow: '0 0 30px rgba(139, 92, 246, 0.6)' }
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        /* Custom scrollbar and glassmorphism helpers */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #090d16;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1e293b;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #06b6d4;
-        }
-        .glass-card {
-            background: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .light .glass-card {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-        }
-        .matrix .glass-card {
-            background: rgba(5, 20, 10, 0.85);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(0, 255, 102, 0.25);
-        }
-        .matrix {
-            background-color: #020b05 !important;
-            color: #00ff66 !important;
-        }
-        .gradient-text {
-            background: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 50%, #ec4899 100%);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .matrix .gradient-text {
-            background: linear-gradient(135deg, #00ff66 0%, #a3ffc2 100%);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-    </style>
+    <title>DOCUMENTORS</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
-<body class="bg-darkBg text-slate-100 font-sans transition-colors duration-300 relative selection:bg-neonCyan selection:text-black">
 
-    <!-- Interactive Background Canvas -->
-    <canvas id="bg-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0 opacity-40"></canvas>
-
-    <!-- Toast Notification Container -->
-    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 px-5 py-3.5 rounded-xl glass-card border-l-4 border-neonCyan shadow-2xl">
-        <i class="fa-solid fa-circle-check text-neonCyan text-xl"></i>
-        <span id="toast-message" class="text-sm font-medium">Notification message</span>
-    </div>
-
-    <!-- Header / Navbar -->
-    <header class="fixed top-0 left-0 w-full z-40 transition-all duration-300 py-4 px-4 sm:px-8 glass-card border-b border-slate-800/50">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
-            <a href="#" class="flex items-center gap-2 group">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-neonCyan to-neonPurple p-0.5 transition-transform duration-300 group-hover:scale-105">
-                    <div class="w-full h-full bg-darkBg rounded-[10px] flex items-center justify-center font-mono font-bold text-lg text-neonCyan group-hover:text-white transition-colors">
-                        AR
-                    </div>
-                </div>
-                <span class="font-bold text-lg tracking-tight hidden sm:block">
-                    Alex<span class="text-neonCyan">.dev</span>
-                </span>
-            </a>
-
-            <!-- Desktop Nav Links -->
-            <nav class="hidden md:flex items-center gap-1 bg-slate-900/60 p-1.5 rounded-full border border-slate-800">
-                <a href="#about" class="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/60 transition">About</a>
-                <a href="#projects" class="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/60 transition">Projects</a>
-                <a href="#stack" class="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/60 transition">Tech Stack</a>
-                <a href="#testimonials" class="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/60 transition">Reviews</a>
-                <a href="#contact" class="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white rounded-full hover:bg-slate-800/60 transition">Contact</a>
-            </nav>
-
-            <!-- Actions & Theme Toggle -->
-            <div class="flex items-center gap-3">
-                <div class="relative">
-                    <button id="theme-btn" onclick="toggleThemeMenu()" class="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-slate-300 transition flex items-center gap-2 text-sm">
-                        <i id="theme-icon" class="fa-solid fa-moon text-neonCyan"></i>
-                        <span id="theme-label" class="hidden lg:inline text-xs font-semibold">Dark</span>
-                        <i class="fa-solid fa-chevron-down text-xs opacity-60"></i>
-                    </button>
-                    <!-- Theme Dropdown -->
-                    <div id="theme-dropdown" class="hidden absolute right-0 mt-2 w-40 glass-card rounded-xl p-2 shadow-2xl border border-slate-700/60 z-50">
-                        <button onclick="setTheme('dark')" class="w-full text-left px-3 py-2 text-xs font-medium rounded-lg hover:bg-slate-800/60 flex items-center gap-2.5">
-                            <i class="fa-solid fa-moon text-neonCyan w-4"></i> Dark Slate
-                        </button>
-                        <button onclick="setTheme('light')" class="w-full text-left px-3 py-2 text-xs font-medium rounded-lg hover:bg-slate-800/60 flex items-center gap-2.5">
-                            <i class="fa-solid fa-sun text-amber-400 w-4"></i> Light Mode
-                        </button>
-                        <button onclick="setTheme('matrix')" class="w-full text-left px-3 py-2 text-xs font-medium rounded-lg hover:bg-slate-800/60 flex items-center gap-2.5 font-mono">
-                            <i class="fa-solid fa-terminal text-matrixGreen w-4"></i> Cyber Matrix
-                        </button>
-                    </div>
-                </div>
-
-                <button onclick="openResumeModal()" class="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-neonCyan/20 to-neonPurple/20 border border-neonCyan/40 text-neonCyan text-sm font-semibold hover:bg-neonCyan hover:text-slate-900 transition-all duration-300">
-                    <i class="fa-solid fa-file-pdf"></i> Resume
-                </button>
-
-                <!-- Mobile Menu Button -->
-                <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden p-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-slate-300">
-                    <i class="fa-solid fa-bars text-lg"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- Mobile Menu Drawer -->
-        <div id="mobile-menu" class="hidden md:hidden mt-4 pt-4 border-t border-slate-800/80 flex flex-col gap-2">
-            <a href="#about" onclick="toggleMobileMenu()" class="px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/60 text-sm font-medium">About</a>
-            <a href="#projects" onclick="toggleMobileMenu()" class="px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/60 text-sm font-medium">Projects</a>
-            <a href="#stack" onclick="toggleMobileMenu()" class="px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/60 text-sm font-medium">Tech Stack</a>
-            <a href="#testimonials" onclick="toggleMobileMenu()" class="px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/60 text-sm font-medium">Reviews</a>
-            <a href="#contact" onclick="toggleMobileMenu()" class="px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/60 text-sm font-medium">Contact</a>
-            <button onclick="openResumeModal(); toggleMobileMenu();" class="mt-2 w-full py-2.5 rounded-lg bg-neonCyan/20 border border-neonCyan/40 text-neonCyan text-sm font-semibold flex items-center justify-center gap-2">
-                <i class="fa-solid fa-file-pdf"></i> View Resume
-            </button>
-        </div>
+<body>
+    <header>
+        <nav>
+           <div class="logo">
+            <span>PRO DOC</span>
+           </div>
+            <ul>
+                <li>
+                    <a href="#services">SERVICES</a>
+                    <a href="#packages">PACKAGES</a>
+                    <a href="#contact">CONTACT</a>
+                </li>
+            </ul>
+        </nav>
     </header>
-
-    <main class="relative z-10 pt-24 space-y-24 max-w-7xl mx-auto px-4 sm:px-8">
-
-        <!-- Hero Section -->
-        <section id="hero" class="min-h-[85vh] flex flex-col justify-center items-start pt-8 pb-12 relative">
-            <!-- Glassmorphic Status Badge -->
-            <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full glass-card border border-emerald-500/30 text-emerald-400 text-xs sm:text-sm font-medium mb-6 animate-float">
-                <span class="relative flex h-2.5 w-2.5">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-                </span>
-                Available for strategic contracts & full-time roles
-            </div>
-
-            <!-- Hero Headline -->
-            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.1] mb-6">
-                Crafting <span class="gradient-text">intelligent digital experiences</span> with scalable code.
-            </h1>
-
-            <p class="text-lg sm:text-xl text-slate-400 max-w-2xl font-normal leading-relaxed mb-8">
-                Hi, I'm <strong class="text-slate-100 font-semibold">Alex Rivera</strong> — a Senior Full-Stack Software Engineer & Product Designer with 7+ years of experience engineering high-throughput web applications, AI integration, and fluid UI systems.
-            </p>
-
-            <!-- CTA Buttons -->
-            <div class="flex flex-wrap items-center gap-4 w-full sm:w-auto">
-                <a href="#projects" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-neonCyan to-neonPurple text-slate-950 font-bold text-center shadow-lg shadow-neonCyan/20 hover:shadow-neonPurple/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2">
-                    <span>View Selected Work</span>
-                    <i class="fa-solid fa-arrow-right text-xs"></i>
-                </a>
-                
-                <a href="#contact" class="w-full sm:w-auto px-8 py-4 rounded-xl glass-card hover:bg-slate-800/80 text-slate-200 font-semibold text-center border border-slate-700/80 hover:border-slate-500 transition-all duration-300 flex items-center justify-center gap-2">
-                    <i class="fa-regular fa-envelope text-neonCyan"></i>
-                    <span>Get In Touch</span>
-                </a>
-
-                <button onclick="openResumeModal()" class="w-full sm:w-auto px-6 py-4 rounded-xl glass-card hover:bg-slate-800/80 text-slate-300 font-semibold text-center border border-slate-700/80 hover:text-white transition-all duration-300 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-download text-neonPurple"></i>
-                    <span>PDF Resume</span>
-                </button>
-            </div>
-
-            <!-- Hero Tech Highlights -->
-            <div class="mt-16 pt-8 border-t border-slate-800/80 w-full flex flex-wrap items-center justify-between gap-6 text-slate-400 text-sm font-mono">
-                <div class="flex items-center gap-2">
-                    <i class="fa-brands fa-react text-cyan-400 text-lg"></i>
-                    <span>React / Next.js</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <i class="fa-brands fa-node-js text-emerald-400 text-lg"></i>
-                    <span>Node.js / Express</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <i class="fa-brands fa-python text-amber-400 text-lg"></i>
-                    <span>Python / FastApi</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <i class="fa-brands fa-aws text-orange-400 text-lg"></i>
-                    <span>Cloud Architecture</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-brain text-purple-400 text-lg"></i>
-                    <span>AI / LLM Pipelines</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- About & Quick Stats Section -->
-        <section id="about" class="space-y-12">
-            <!-- Section Header -->
-            <div class="space-y-2">
-                <div class="text-neonCyan font-mono text-sm tracking-wider uppercase">// 01. ABOUT & STATS</div>
-                <h2 class="text-3xl sm:text-4xl font-bold">Engineering with Purpose</h2>
-            </div>
-
-            <!-- Quick Stats Counters -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="p-6 rounded-2xl glass-card border border-slate-800/80 text-center hover:border-neonCyan/40 transition">
-                    <div class="text-3xl sm:text-4xl font-extrabold text-neonCyan font-mono" id="stat-exp">7+</div>
-                    <div class="text-xs sm:text-sm text-slate-400 mt-2 font-medium">Years Experience</div>
-                </div>
-                <div class="p-6 rounded-2xl glass-card border border-slate-800/80 text-center hover:border-neonPurple/40 transition">
-                    <div class="text-3xl sm:text-4xl font-extrabold text-neonPurple font-mono" id="stat-projects">45+</div>
-                    <div class="text-xs sm:text-sm text-slate-400 mt-2 font-medium">Projects Shipped</div>
-                </div>
-                <div class="p-6 rounded-2xl glass-card border border-slate-800/80 text-center hover:border-emerald-400/40 transition">
-                    <div class="text-3xl sm:text-4xl font-extrabold text-emerald-400 font-mono" id="stat-clients">30+</div>
-                    <div class="text-xs sm:text-sm text-slate-400 mt-2 font-medium">Happy Clients</div>
-                </div>
-                <div class="p-6 rounded-2xl glass-card border border-slate-800/80 text-center hover:border-pink-500/40 transition">
-                    <div class="text-3xl sm:text-4xl font-extrabold text-pink-500 font-mono" id="stat-commits">2.4k</div>
-                    <div class="text-xs sm:text-sm text-slate-400 mt-2 font-medium">Code Commits (2025)</div>
-                </div>
-            </div>
-
-            <!-- Bio & Experience Timeline Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                <!-- Bio Card -->
-                <div class="lg:col-span-5 p-8 rounded-2xl glass-card space-y-6">
-                    <div class="relative w-28 h-28 rounded-2xl overflow-hidden border-2 border-neonCyan/50 shadow-xl">
-                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="Alex Rivera Profile" class="w-full h-full object-cover">
+    <main>
+        <!-- SERVICES SECTION -->
+        <section id="services">
+            <h2 class="section-title">SERVICES WE OFFER</h2>
+            <div class="sidescroll">
+                <button class="csrllbn prevbn" onclick="scrollTrack('serviceScroll', -1)">&#10094</button>
+                <button class="csrllbn nexbn" onclick="scrollTrack('serviceScroll', 1)">&#10095</button>
+                <div class="scroller" id="serviceScroll">
+                    <div class="scroll-card">
+                        <p>professional cv</p>
+                        <img src="" alt="">
+                        <div class="ibiciro">
+                            <p>2000frw</p>
+                        </div>
+                        <button class="bn">
+                            <a href="professionalcv.html">create cv</a></button>
                     </div>
-                    <h3 class="text-2xl font-bold">Behind the Code</h3>
-                    <p class="text-slate-300 text-sm leading-relaxed">
-                        I am a full-stack engineer driven by building intuitive, scalable digital products. Over the past 7 years, I have architected web platforms serving millions of requests, led engineering teams, and designed sleek UI frameworks.
-                    </p>
-                    <p class="text-slate-400 text-sm leading-relaxed">
-                        When I'm not writing clean code, I contribute to open-source software, explore generative AI models, and share technical insights on my blog.
-                    </p>
-                    
-                    <div class="pt-4 border-t border-slate-800 flex items-center gap-4 text-slate-300 text-sm">
-                        <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-location-dot text-neonCyan"></i>
-                            <span>San Francisco, CA (Remote)</span>
+                    <div class="scroll-card">
+                        <p>cover letter</p>
+                        <img src="" alt="">
+                        <div class="ibiciro">
+                            <p>2000frw</p>
                         </div>
+                        <button class="bn">take</button>
                     </div>
-                </div>
-
-                <!-- Interactive Timeline -->
-                <div class="lg:col-span-7 p-8 rounded-2xl glass-card space-y-6">
-                    <h3 class="text-xl font-bold flex items-center gap-2">
-                        <i class="fa-solid fa-briefcase text-neonPurple"></i>
-                        <span>Career Timeline</span>
-                    </h3>
-
-                    <div class="relative pl-6 border-l-2 border-slate-800 space-y-8">
-                        <!-- Timeline Item 1 -->
-                        <div class="relative group">
-                            <div class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-neonCyan border-4 border-darkBg group-hover:scale-125 transition"></div>
-                            <div class="flex justify-between items-center mb-1">
-                                <h4 class="font-bold text-base text-slate-100">Lead Full-Stack Engineer</h4>
-                                <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-neonCyan/10 text-neonCyan border border-neonCyan/20">2023 - Present</span>
-                            </div>
-                            <p class="text-xs text-neonPurple font-semibold mb-2">Vortex Innovations Inc.</p>
-                            <p class="text-slate-400 text-xs leading-relaxed">Architecting real-time streaming analytics dashboards, leading a cross-functional team of 8 engineers, and reducing API response latency by 42%.</p>
+                    <div class="scroll-card">
+                        <p>Tutoring</p>
+                        <img src="" alt="">
+                        <div class="ibiciro">
+                            <p>2000frw</p>
                         </div>
-
-                        <!-- Timeline Item 2 -->
-                        <div class="relative group">
-                            <div class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-neonPurple border-4 border-darkBg group-hover:scale-125 transition"></div>
-                            <div class="flex justify-between items-center mb-1">
-                                <h4 class="font-bold text-base text-slate-100">Senior React & Node Specialist</h4>
-                                <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-slate-800 text-slate-400">2020 - 2023</span>
-                            </div>
-                            <p class="text-xs text-neonCyan font-semibold mb-2">Apex Digital Cloud</p>
-                            <p class="text-slate-400 text-xs leading-relaxed">Built microservices, implemented design systems with Tailwind CSS, and delivered 15+ custom client enterprise platforms.</p>
+                        <button class="bn">take</button>
+                    </div>
+                    <div class="scroll-card">
+                        <p>formal letter</p>
+                        <img src="" alt="">
+                        <div class="ibiciro">
+                            <p>2000frw</p>
                         </div>
-
-                        <!-- Timeline Item 3 -->
-                        <div class="relative group">
-                            <div class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-emerald-400 border-4 border-darkBg group-hover:scale-125 transition"></div>
-                            <div class="flex justify-between items-center mb-1">
-                                <h4 class="font-bold text-base text-slate-100">UI/UX Engineer & Consultant</h4>
-                                <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-slate-800 text-slate-400">2018 - 2020</span>
-                            </div>
-                            <p class="text-xs text-emerald-400 font-semibold mb-2">Freelance / Studio</p>
-                            <p class="text-slate-400 text-xs leading-relaxed">Crafted responsive web interfaces, interactive prototypes, and modern branding for Y-Combinator backed startups.</p>
+                        <button class="bn">take</button>
+                    </div>
+                    <div class="scroll-card">
+                        <p>portfolio</p>
+                        <img src="" alt="">
+                        <div class="ibiciro">
+                            <p>2000frw</p>
                         </div>
+                        <button class="bn">take</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Tech Stack Explorer Section -->
-        <section id="stack" class="space-y-8">
-            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                <div class="space-y-2">
-                    <div class="text-neonCyan font-mono text-sm tracking-wider uppercase">// 02. TECH MATRIX</div>
-                    <h2 class="text-3xl sm:text-4xl font-bold">Interactive Tech Explorer</h2>
-                </div>
-                <p class="text-slate-400 text-sm max-w-md">
-                    Click any technology badge below to filter associated showcase projects and inspect expertise level.
-                </p>
-            </div>
-
-            <!-- Filter Categories -->
-            <div id="stack-tabs" class="flex flex-wrap gap-2 pb-2">
-                <button onclick="filterStack('all')" class="stack-tab active px-4 py-2 rounded-xl text-xs font-semibold bg-neonCyan text-slate-950 transition">All Skills</button>
-                <button onclick="filterStack('frontend')" class="stack-tab px-4 py-2 rounded-xl text-xs font-semibold glass-card text-slate-300 hover:text-white transition">Frontend</button>
-                <button onclick="filterStack('backend')" class="stack-tab px-4 py-2 rounded-xl text-xs font-semibold glass-card text-slate-300 hover:text-white transition">Backend & Cloud</button>
-                <button onclick="filterStack('design')" class="stack-tab px-4 py-2 rounded-xl text-xs font-semibold glass-card text-slate-300 hover:text-white transition">Design & UX</button>
-                <button onclick="filterStack('tools')" class="stack-tab px-4 py-2 rounded-xl text-xs font-semibold glass-card text-slate-300 hover:text-white transition">Tools & AI</button>
-            </div>
-
-            <!-- Tech Chips Grid -->
-            <div id="tech-chips-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                <!-- Tech cards injected by JS -->
-            </div>
-        </section>
-
-        <!-- Portfolio Projects Section -->
-        <section id="projects" class="space-y-8">
-            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                <div class="space-y-2">
-                    <div class="text-neonCyan font-mono text-sm tracking-wider uppercase">// 03. FEATURED WORK</div>
-                    <h2 class="text-3xl sm:text-4xl font-bold">Showcase Projects</h2>
-                </div>
-
-                <!-- Search and Filters Bar -->
-                <div class="flex flex-col sm:flex-row items-center gap-3">
-                    <div class="relative w-full sm:w-64">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-500 text-xs"></i>
-                        <input id="project-search" type="text" oninput="handleProjectSearch()" placeholder="Search project or tag..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-900/80 border border-slate-700 text-xs focus:outline-none focus:border-neonCyan transition text-slate-200">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Category Filters -->
-            <div class="flex flex-wrap gap-2 border-b border-slate-800/80 pb-4">
-                <button onclick="filterProjects('all', this)" class="proj-filter-btn px-4 py-2 rounded-lg text-xs font-semibold bg-neonCyan/20 border border-neonCyan/50 text-neonCyan transition">All Projects</button>
-                <button onclick="filterProjects('web', this)" class="proj-filter-btn px-4 py-2 rounded-lg text-xs font-semibold glass-card text-slate-400 hover:text-white transition">Web Apps</button>
-                <button onclick="filterProjects('ai', this)" class="proj-filter-btn px-4 py-2 rounded-lg text-xs font-semibold glass-card text-slate-400 hover:text-white transition">AI & ML</button>
-                <button onclick="filterProjects('ui', this)" class="proj-filter-btn px-4 py-2 rounded-lg text-xs font-semibold glass-card text-slate-400 hover:text-white transition">UI/UX Systems</button>
-                <button onclick="filterProjects('mobile', this)" class="proj-filter-btn px-4 py-2 rounded-lg text-xs font-semibold glass-card text-slate-400 hover:text-white transition">Mobile</button>
-            </div>
-
-            <!-- Active Tag Indicator -->
-            <div id="active-tag-banner" class="hidden items-center justify-between px-4 py-2 rounded-lg bg-neonCyan/10 border border-neonCyan/30 text-xs text-neonCyan">
-                <span>Filtering by tech tag: <strong id="active-tag-name">React</strong></span>
-                <button onclick="clearTagFilter()" class="hover:underline font-bold">Clear Filter</button>
-            </div>
-
-            <!-- Projects Grid -->
-            <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Projects injected by JS -->
-            </div>
-        </section>
-
-        <!-- Testimonials Section -->
-        <section id="testimonials" class="space-y-8">
-            <div class="space-y-2">
-                <div class="text-neonCyan font-mono text-sm tracking-wider uppercase">// 04. RECOMMENDATIONS</div>
-                <h2 class="text-3xl sm:text-4xl font-bold">Client & Team Endorsements</h2>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="p-6 rounded-2xl glass-card border border-slate-800/80 space-y-4 flex flex-col justify-between hover:border-neonCyan/30 transition">
-                    <div class="space-y-3">
-                        <div class="flex text-amber-400 text-xs gap-1">
-                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+        <!-- PACKAGES SECTION -->
+        <section id="packages">
+            <h2 class="section-title">PACKAGES</h2>
+            <div class="sidescroll">
+                <button class="csrllbn prevbn" onclick="scrollTrack('packageScroll', -1)">&#10094</button>
+                <button class="csrllbn nexbn" onclick="scrollTrack('packageScroll', 1)">&#10095</button>
+                <div class="scroller" id="packageScroll">
+                    <div class="scroll-card">
+                        <p>Student Combo</p>
+                        <img src="" alt="">
+                        <div class="ibiciro">
+                            <p>3500frw</p>
                         </div>
-                        <p class="text-slate-300 text-xs italic leading-relaxed">
-                            "Alex transformed our legacy platform into a high-performance modern web app in record time. His attention to detail and UI aesthetic made a massive impact on user engagement."
-                        </p>
+                        <button class="bn">take</button>
                     </div>
-                    <div class="flex items-center gap-3 pt-4 border-t border-slate-800/80">
-                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&q=80" alt="Sarah Jenkins" class="w-10 h-10 rounded-full object-cover border border-neonCyan">
-                        <div>
-                            <h4 class="text-xs font-bold text-slate-100">Sarah Jenkins</h4>
-                            <p class="text-[10px] text-slate-400">VP of Product, FinTech Labs</p>
+                    <div class="scroll-card">
+                        <p>Job Seeker Pack</p>
+                        <img src="" alt="">
+                        <div class="ibiciro">
+                            <p>5000frw</p>
                         </div>
+                        <button class="bn">take</button>
                     </div>
-                </div>
-
-                <div class="p-6 rounded-2xl glass-card border border-slate-800/80 space-y-4 flex flex-col justify-between hover:border-neonPurple/30 transition">
-                    <div class="space-y-3">
-                        <div class="flex text-amber-400 text-xs gap-1">
-                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    <div class="scroll-card">
+                        <p>Business Bundle</p>
+                        <img src="" alt="">
+                        <div class="ibiciro">
+                            <p>8000frw</p>
                         </div>
-                        <p class="text-slate-300 text-xs italic leading-relaxed">
-                            "Extremely clean code, scalable architecture, and proactive communication. Alex delivered complex AI integrations smoothly without any downtime."
-                        </p>
-                    </div>
-                    <div class="flex items-center gap-3 pt-4 border-t border-slate-800/80">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80" alt="Marcus Chen" class="w-10 h-10 rounded-full object-cover border border-neonPurple">
-                        <div>
-                            <h4 class="text-xs font-bold text-slate-100">Marcus Chen</h4>
-                            <p class="text-[10px] text-slate-400">CTO, Nexus Analytics</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-6 rounded-2xl glass-card border border-slate-800/80 space-y-4 flex flex-col justify-between hover:border-emerald-400/30 transition">
-                    <div class="space-y-3">
-                        <div class="flex text-amber-400 text-xs gap-1">
-                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                        </div>
-                        <p class="text-slate-300 text-xs italic leading-relaxed">
-                            "A rare software engineer who understands design systems as deeply as database architecture. Working with Alex was an absolute pleasure."
-                        </p>
-                    </div>
-                    <div class="flex items-center gap-3 pt-4 border-t border-slate-800/80">
-                        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=120&q=80" alt="Elena Rostova" class="w-10 h-10 rounded-full object-cover border border-emerald-400">
-                        <div>
-                            <h4 class="text-xs font-bold text-slate-100">Elena Rostova</h4>
-                            <p class="text-[10px] text-slate-400">Design Lead, Studio X</p>
-                        </div>
+                        <button class="bn">take</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Interactive Contact Section -->
-        <section id="contact" class="space-y-8 pb-16">
-            <div class="space-y-2">
-                <div class="text-neonCyan font-mono text-sm tracking-wider uppercase">// 05. CONTACT</div>
-                <h2 class="text-3xl sm:text-4xl font-bold">Let's Build Something Exceptional</h2>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                <!-- Direct Info -->
-                <div class="lg:col-span-5 space-y-6 p-8 rounded-2xl glass-card">
-                    <h3 class="text-xl font-bold">Get In Touch Directly</h3>
-                    <p class="text-slate-300 text-sm leading-relaxed">
-                        Have a project in mind, want to discuss a role, or just want to connect? Send a message using the form or copy my direct email below.
-                    </p>
-
-                    <!-- Email Copy Box -->
-                    <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-700/80 flex items-center justify-between gap-3">
-                        <div class="flex items-center gap-3 truncate">
-                            <i class="fa-regular fa-envelope text-neonCyan text-lg"></i>
-                            <span id="my-email" class="font-mono text-xs sm:text-sm text-slate-200">alex.rivera.dev@example.com</span>
+        <!-- CONTACT SECTION -->
+        <section id="contact">
+            <h2 class="section-title">CONTACT</h2>
+            <div class="sidescroll">
+                <button class="csrllbn prevbn" onclick="scrollTrack('contactScroll', -1)">&#10094</button>
+                <button class="csrllbn nexbn" onclick="scrollTrack('contactScroll', 1)">&#10095</button>
+                <div class="scroller" id="contactScroll">
+                    <div class="scroll-card">
+                        <p>WhatsApp Support</p>
+                        <img src="" alt="">
+                        <div class="ibiciro">
+                            <p>Available</p>
                         </div>
-                        <button onclick="copyEmailToClipboard()" class="px-3 py-1.5 rounded-lg bg-neonCyan/20 hover:bg-neonCyan/30 text-neonCyan text-xs font-semibold transition flex items-center gap-1.5 shrink-0">
-                            <i class="fa-regular fa-copy"></i>
-                            <span>Copy</span>
-                        </button>
+                        <button class="bn">chat</button>
                     </div>
-
-                    <!-- Social Icons -->
-                    <div class="space-y-3 pt-2">
-                        <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Connect across networks</div>
-                        <div class="flex items-center gap-3">
-                            <a href="https://github.com" target="_blank" rel="noopener" class="w-11 h-11 rounded-xl glass-card flex items-center justify-center text-slate-300 hover:text-white hover:border-neonCyan hover:shadow-lg hover:shadow-neonCyan/20 transition duration-300">
-                                <i class="fa-brands fa-github text-lg"></i>
-                            </a>
-                            <a href="https://linkedin.com" target="_blank" rel="noopener" class="w-11 h-11 rounded-xl glass-card flex items-center justify-center text-slate-300 hover:text-white hover:border-neonCyan hover:shadow-lg hover:shadow-neonCyan/20 transition duration-300">
-                                <i class="fa-brands fa-linkedin-in text-lg"></i>
-                            </a>
-                            <a href="https://twitter.com" target="_blank" rel="noopener" class="w-11 h-11 rounded-xl glass-card flex items-center justify-center text-slate-300 hover:text-white hover:border-neonPurple hover:shadow-lg hover:shadow-neonPurple/20 transition duration-300">
-                                <i class="fa-brands fa-x-twitter text-lg"></i>
-                            </a>
-                            <a href="https://dribbble.com" target="_blank" rel="noopener" class="w-11 h-11 rounded-xl glass-card flex items-center justify-center text-slate-300 hover:text-white hover:border-pink-500 hover:shadow-lg hover:shadow-pink-500/20 transition duration-300">
-                                <i class="fa-brands fa-dribbble text-lg"></i>
-                            </a>
+                    <div class="scroll-card">
+                        <p>Phone Call</p>
+                        <img src="" alt="">
+                        <div class="ibiciro">
+                            <p>☎Direct</p>
                         </div>
+                        <button class="bn">📞call</button>
+                    </div>
+                    <div class="scroll-card">
+                        <p>Email Us</p>
+                        <img src="" alt="">
+                        <div class="ibiciro">
+                            <p>24/7</p>
+                        </div>
+                        <button class="bn">send</button>
                     </div>
                 </div>
-
-                <!-- Contact Form -->
-                <form id="contact-form" onsubmit="handleContactSubmit(event)" class="lg:col-span-7 p-8 rounded-2xl glass-card space-y-5">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Your Name *</label>
-                            <input type="text" id="form-name" required placeholder="Jane Doe" class="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-700/80 text-sm text-slate-100 focus:outline-none focus:border-neonCyan transition">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Your Email *</label>
-                            <input type="email" id="form-email" required placeholder="jane@company.com" class="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-700/80 text-sm text-slate-100 focus:outline-none focus:border-neonCyan transition">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">Subject</label>
-                        <input type="text" id="form-subject" placeholder="Project Inquiry / Hiring" class="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-700/80 text-sm text-slate-100 focus:outline-none focus:border-neonCyan transition">
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">Message *</label>
-                        <textarea id="form-message" required rows="4" placeholder="Tell me about your project, timeline, and goals..." class="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-700/80 text-sm text-slate-100 focus:outline-none focus:border-neonCyan transition"></textarea>
-                    </div>
-
-                    <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-neonCyan to-neonPurple text-slate-950 font-bold text-sm shadow-lg shadow-neonCyan/20 hover:scale-[1.01] active:scale-[0.99] transition duration-300 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-paper-plane"></i>
-                        <span>Send Message</span>
-                    </button>
-                </form>
             </div>
         </section>
-
     </main>
-
-    <!-- Live Demo Modal -->
-    <div id="project-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-        <div class="relative w-full max-w-4xl glass-card rounded-2xl overflow-hidden border border-slate-700 shadow-2xl flex flex-col max-h-[90vh]">
-            <!-- Modal Header -->
-            <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <span id="modal-project-badge" class="px-2.5 py-0.5 rounded-full bg-neonCyan/20 text-neonCyan text-xs font-semibold">Web App</span>
-                    <h3 id="modal-project-title" class="font-bold text-lg text-slate-100">Project Title</h3>
-                </div>
-                <button onclick="closeProjectModal()" class="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-
-            <!-- Modal Content -->
-            <div class="p-6 overflow-y-auto space-y-6">
-                <!-- Preview Canvas / Image Banner -->
-                <div class="relative w-full h-64 sm:h-80 rounded-xl overflow-hidden bg-slate-900 border border-slate-800">
-                    <img id="modal-project-img" src="" alt="Project Preview" class="w-full h-full object-cover">
-                </div>
-
-                <!-- Specs Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 rounded-xl bg-slate-900/60 border border-slate-800 text-xs">
-                    <div>
-                        <span class="text-slate-500 block mb-1">Role</span>
-                        <span id="modal-project-role" class="font-semibold text-slate-200">Lead Architect</span>
-                    </div>
-                    <div>
-                        <span class="text-slate-500 block mb-1">Year</span>
-                        <span id="modal-project-year" class="font-semibold text-slate-200">2024</span>
-                    </div>
-                    <div>
-                        <span class="text-slate-500 block mb-1">Impact</span>
-                        <span id="modal-project-impact" class="font-semibold text-neonCyan">1M+ Active Users</span>
-                    </div>
-                </div>
-
-                <!-- Description -->
-                <div class="space-y-2">
-                    <h4 class="text-xs font-bold uppercase text-slate-400 tracking-wider">Overview</h4>
-                    <p id="modal-project-desc" class="text-sm text-slate-300 leading-relaxed">
-                        Detailed project description goes here...
-                    </p>
-                </div>
-
-                <!-- Tech Stack Tags -->
-                <div class="space-y-2">
-                    <h4 class="text-xs font-bold uppercase text-slate-400 tracking-wider">Tech Stack Used</h4>
-                    <div id="modal-project-tags" class="flex flex-wrap gap-2">
-                        <!-- Dynamic Tags -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal Footer CTA -->
-            <div class="px-6 py-4 border-t border-slate-800 flex items-center justify-end gap-3 bg-slate-900/80">
-                <a id="modal-github-link" href="#" target="_blank" rel="noopener" class="px-4 py-2 rounded-xl glass-card hover:bg-slate-800 text-slate-200 text-xs font-semibold flex items-center gap-2 border border-slate-700">
-                    <i class="fa-brands fa-github"></i>
-                    <span>GitHub Code</span>
-                </a>
-                <a id="modal-demo-link" href="#" target="_blank" rel="noopener" class="px-5 py-2 rounded-xl bg-neonCyan text-slate-950 text-xs font-bold flex items-center gap-2 shadow-md hover:bg-cyan-400 transition">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    <span>Live Demo</span>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Interactive Resume Modal -->
-    <div id="resume-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-        <div class="relative w-full max-w-3xl glass-card rounded-2xl overflow-hidden border border-slate-700 shadow-2xl flex flex-col max-h-[90vh]">
-            <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
-                <h3 class="font-bold text-lg text-slate-100 flex items-center gap-2">
-                    <i class="fa-solid fa-file-pdf text-neonCyan"></i>
-                    <span>Curriculum Vitae — Alex Rivera</span>
-                </h3>
-                <div class="flex items-center gap-2">
-                    <button onclick="window.print()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-print"></i>
-                        <span>Print</span>
-                    </button>
-                    <button onclick="closeResumeModal()" class="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition">
-                        <i class="fa-solid fa-xmark text-lg"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="p-8 overflow-y-auto space-y-6 text-slate-300 text-xs sm:text-sm leading-relaxed bg-slate-950/90 font-sans">
-                <!-- Resume Header -->
-                <div class="border-b border-slate-800 pb-6 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-                    <div>
-                        <h1 class="text-2xl font-bold text-slate-100">Alex Rivera</h1>
-                        <p class="text-neonCyan font-mono text-xs mt-1">Senior Full-Stack Software Engineer & Product Architect</p>
-                    </div>
-                    <div class="text-slate-400 text-xs space-y-1 font-mono">
-                        <div>Email: alex.rivera.dev@example.com</div>
-                        <div>Website: alexrivera.dev</div>
-                        <div>Location: San Francisco, CA</div>
-                    </div>
-                </div>
-
-                <!-- Executive Summary -->
-                <div class="space-y-2">
-                    <h2 class="text-xs font-bold uppercase text-neonPurple tracking-wider font-mono">// EXECUTIVE SUMMARY</h2>
-                    <p class="text-slate-300">
-                        Senior Software Engineer with 7+ years of experience designing and scaling distributed web services, AI analytics engines, and modern frontend platforms. Proven track record of leading development teams, reducing system latency, and delivering intuitive interfaces used by global clients.
-                    </p>
-                </div>
-
-                <!-- Key Skills -->
-                <div class="space-y-2">
-                    <h2 class="text-xs font-bold uppercase text-neonPurple tracking-wider font-mono">// CORE COMPETENCIES</h2>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
-                        <div class="p-2 rounded bg-slate-900 border border-slate-800">TypeScript / React / Next.js</div>
-                        <div class="p-2 rounded bg-slate-900 border border-slate-800">Node.js / Express / FastApi</div>
-                        <div class="p-2 rounded bg-slate-900 border border-slate-800">Python / TensorFlow / OpenAI API</div>
-                        <div class="p-2 rounded bg-slate-900 border border-slate-800">PostgreSQL / MongoDB / Redis</div>
-                        <div class="p-2 rounded bg-slate-900 border border-slate-800">AWS / Docker / Kubernetes</div>
-                        <div class="p-2 rounded bg-slate-900 border border-slate-800">Tailwind CSS / UI Design Systems</div>
-                    </div>
-                </div>
-
-                <!-- Experience -->
-                <div class="space-y-4">
-                    <h2 class="text-xs font-bold uppercase text-neonPurple tracking-wider font-mono">// RECENT EXPERIENCE</h2>
-                    <div class="space-y-3">
-                        <div>
-                            <div class="flex justify-between text-slate-100 font-semibold">
-                                <span>Lead Full-Stack Engineer — Vortex Innovations</span>
-                                <span class="font-mono text-xs text-neonCyan">2023 - PRESENT</span>
-                            </div>
-                            <ul class="list-disc list-inside text-slate-400 text-xs mt-1 space-y-1">
-                                <li>Spearheaded microservices migration handling 10M+ daily events using Node.js & Redis.</li>
-                                <li>Mentored 8 engineers and introduced CI/CD pipelines cut deployment cycles by 50%.</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-slate-100 font-semibold">
-                                <span>Senior React Engineer — Apex Digital Cloud</span>
-                                <span class="font-mono text-xs text-slate-500">2020 - 2023</span>
-                            </div>
-                            <ul class="list-disc list-inside text-slate-400 text-xs mt-1 space-y-1">
-                                <li>Built real-time data visualization suites with React, D3, and WebSockets.</li>
-                                <li>Created custom Tailwind design tokens adopted across 12 product squads.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="border-t border-slate-800/80 py-8 px-4 text-center text-xs text-slate-500 font-mono">
-        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div>
-                &copy; 2026 Alex Rivera. Built with Tailwind CSS & Vanilla JS.
-            </div>
-            <div class="flex items-center gap-4">
-                <a href="#hero" class="hover:text-neonCyan transition">Back to top ↑</a>
-            </div>
-        </div>
+    <footer>
+        <marquee behavior="" direction="left" class="foo">YOUR DOCUMENT, OUR PROIRITY</marquee>
     </footer>
-
-    <script>
-        const techSkills = [
-            { id: 'react', name: 'React.js', category: 'frontend', level: 95, icon: 'fa-brands fa-react', color: 'text-cyan-400' },
-            { id: 'typescript', name: 'TypeScript', category: 'frontend', level: 90, icon: 'fa-code', color: 'text-blue-400' },
-            { id: 'tailwind', name: 'Tailwind CSS', category: 'frontend', level: 98, icon: 'fa-css3-alt', color: 'text-teal-400' },
-            { id: 'nextjs', name: 'Next.js', category: 'frontend', level: 88, icon: 'fa-globe', color: 'text-slate-100' },
-            { id: 'nodejs', name: 'Node.js', category: 'backend', level: 92, icon: 'fa-brands fa-node-js', color: 'text-emerald-400' },
-            { id: 'python', name: 'Python', category: 'backend', level: 85, icon: 'fa-brands fa-python', color: 'text-amber-400' },
-            { id: 'postgres', name: 'PostgreSQL', category: 'backend', level: 88, icon: 'fa-database', color: 'text-indigo-400' },
-            { id: 'aws', name: 'AWS Cloud', category: 'backend', level: 80, icon: 'fa-brands fa-aws', color: 'text-orange-400' },
-            { id: 'figma', name: 'Figma UI/UX', category: 'design', level: 90, icon: 'fa-brands fa-figma', color: 'text-pink-400' },
-            { id: 'design-systems', name: 'Design Systems', category: 'design', level: 94, icon: 'fa-palette', color: 'text-purple-400' },
-            { id: 'docker', name: 'Docker / K8s', category: 'tools', level: 82, icon: 'fa-brands fa-docker', color: 'text-blue-500' },
-            { id: 'ai-llm', name: 'OpenAI / LangChain', category: 'tools', level: 87, icon: 'fa-brain', color: 'text-neonCyan' }
-        ];
-
-        const projectsData = [
-            {
-                id: 'proj-1',
-                title: 'AetherAI Analytics Engine',
-                category: 'ai',
-                badge: 'AI & ML',
-                image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80',
-                role: 'Lead Architect',
-                year: '2025',
-                impact: '50M API requests/mo',
-                description: 'Real-time AI telemetry dashboard processing unstructured data logs using custom LLM pipelines, automated cluster anomaly detection, and WebSocket streaming.',
-                tags: ['Python', 'React', 'OpenAI / LangChain', 'PostgreSQL', 'Tailwind CSS'],
-                demoUrl: 'https://example.com/demo1',
-                githubUrl: 'https://github.com/example/aether-ai'
-            },
-            {
-                id: 'proj-2',
-                title: 'SaaS Pulse Mobile Wallet',
-                category: 'mobile',
-                badge: 'Mobile App',
-                image: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=800&q=80',
-                role: 'Mobile Lead',
-                year: '2024',
-                impact: '100k+ App Downloads',
-                description: 'Cross-platform financial crypto & fiat asset tracker with high security biometric validation, custom chart rendering, and offline transaction synchronization.',
-                tags: ['React', 'TypeScript', 'Node.js', 'Tailwind CSS'],
-                demoUrl: 'https://example.com/demo2',
-                githubUrl: 'https://github.com/example/saas-pulse'
-            },
-            {
-                id: 'proj-3',
-                title: 'GlassUI Design Tokens Library',
-                category: 'ui',
-                badge: 'UI/UX Systems',
-                image: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80',
-                role: 'Design System Architect',
-                year: '2024',
-                impact: '12 Product Teams',
-                description: 'Open-source dark glassmorphism component system built with Tailwind CSS and React primitives, providing accessible UI tokens and fluid animations.',
-                tags: ['React', 'Tailwind CSS', 'Figma UI/UX', 'Design Systems'],
-                demoUrl: 'https://example.com/demo3',
-                githubUrl: 'https://github.com/example/glass-ui'
-            },
-            {
-                id: 'proj-4',
-                title: 'CyberStream Cloud IDE',
-                category: 'web',
-                badge: 'Web Apps',
-                image: 'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?auto=format&fit=crop&w=800&q=80',
-                role: 'Full-Stack Developer',
-                year: '2023',
-                impact: '99.98% Uptime',
-                description: 'Browser-based developer sandbox featuring in-memory web containers, collaborative syntax highlighting, and instantaneous preview deployment.',
-                tags: ['Next.js', 'TypeScript', 'Node.js', 'Docker / K8s', 'AWS Cloud'],
-                demoUrl: 'https://example.com/demo4',
-                githubUrl: 'https://github.com/example/cyber-stream'
-            },
-            {
-                id: 'proj-5',
-                title: 'Vortex E-Commerce Cloud',
-                category: 'web',
-                badge: 'Web Apps',
-                image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80',
-                role: 'Senior Engineer',
-                year: '2023',
-                impact: '$2.5M GMV Processed',
-                description: 'Headless e-commerce ecosystem built for high concurrency seasonal sales with dynamic image optimization and real-time checkout validation.',
-                tags: ['Next.js', 'PostgreSQL', 'Tailwind CSS', 'AWS Cloud'],
-                demoUrl: 'https://example.com/demo5',
-                githubUrl: 'https://github.com/example/vortex-cloud'
-            },
-            {
-                id: 'proj-6',
-                title: 'Visionary AR Prototype',
-                category: 'ui',
-                badge: 'UI/UX Systems',
-                image: 'https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&fit=crop&w=800&q=80',
-                role: 'UX Researcher & Eng',
-                year: '2022',
-                impact: 'Featured on ProductHunt',
-                description: 'Interactive spatial UI conceptualization and web prototype exploring gesture navigation and immersive 3D dashboard overlays.',
-                tags: ['Figma UI/UX', 'React', 'Design Systems'],
-                demoUrl: 'https://example.com/demo6',
-                githubUrl: 'https://github.com/example/visionary-ar'
-            }
-        ];
-
-        let activeTagFilter = null;
-        let activeCategoryFilter = 'all';
-
-        function renderTechChips(filterCategory = 'all') {
-            const grid = document.getElementById('tech-chips-grid');
-            grid.innerHTML = '';
-
-            const filtered = filterCategory === 'all' 
-                ? techSkills 
-                : techSkills.filter(s => s.category === filterCategory);
-
-            filtered.forEach(skill => {
-                const card = document.createElement('div');
-                card.className = `p-4 rounded-xl glass-card border border-slate-800 hover:border-neonCyan/50 transition cursor-pointer group flex flex-col justify-between`;
-                card.onclick = () => filterProjectsByTag(skill.name);
-
-                card.innerHTML = `
-                    <div class="flex items-center justify-between mb-3">
-                        <i class="${skill.icon} ${skill.color} text-2xl group-hover:scale-110 transition-transform"></i>
-                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-semibold">${skill.level}%</span>
-                    </div>
-                    <div>
-                        <h4 class="text-xs font-bold text-slate-200 group-hover:text-neonCyan transition">${skill.name}</h4>
-                        <div class="w-full bg-slate-800 rounded-full h-1 mt-2 overflow-hidden">
-                            <div class="bg-gradient-to-r from-neonCyan to-neonPurple h-1 rounded-full" style="width: ${skill.level}%"></div>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function filterStack(category) {
-            document.querySelectorAll('.stack-tab').forEach(btn => {
-                btn.className = 'stack-tab px-4 py-2 rounded-xl text-xs font-semibold glass-card text-slate-300 hover:text-white transition';
-            });
-            event.target.className = 'stack-tab active px-4 py-2 rounded-xl text-xs font-semibold bg-neonCyan text-slate-950 transition';
-            renderTechChips(category);
-        }
-
-        function renderProjects() {
-            const grid = document.getElementById('projects-grid');
-            grid.innerHTML = '';
-
-            const searchTerm = document.getElementById('project-search').value.toLowerCase();
-
-            const filtered = projectsData.filter(proj => {
-                const matchesCategory = activeCategoryFilter === 'all' || proj.category === activeCategoryFilter;
-                const matchesTag = !activeTagFilter || proj.tags.includes(activeTagFilter);
-                const matchesSearch = proj.title.toLowerCase().includes(searchTerm) || 
-                                      proj.description.toLowerCase().includes(searchTerm) ||
-                                      proj.tags.some(t => t.toLowerCase().includes(searchTerm));
-
-                return matchesCategory && matchesTag && matchesSearch;
-            });
-
-            if (filtered.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full text-center py-12 glass-card rounded-2xl space-y-3">
-                        <i class="fa-solid fa-folder-open text-3xl text-slate-600"></i>
-                        <p class="text-sm text-slate-400">No projects match your filter criteria.</p>
-                        <button onclick="resetAllFilters()" class="text-xs text-neonCyan underline font-semibold">Reset all filters</button>
-                    </div>
-                `;
-                return;
-            }
-
-            filtered.forEach(proj => {
-                const card = document.createElement('div');
-                card.className = 'glass-card rounded-2xl overflow-hidden border border-slate-800 hover:border-slate-700 transition duration-300 group flex flex-col justify-between';
-
-                const tagsHtml = proj.tags.map(tag => `
-                    <span onclick="event.stopPropagation(); filterProjectsByTag('${tag}')" class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800/80 hover:bg-neonCyan/20 hover:text-neonCyan border border-slate-700/60 text-slate-300 cursor-pointer transition">
-                        ${tag}
-                    </span>
-                `).join('');
-
-                card.innerHTML = `
-                    <div>
-                        <!-- Project Image Container -->
-                        <div class="relative h-48 overflow-hidden bg-slate-900">
-                            <img src="${proj.image}" alt="${proj.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-t from-darkBg via-transparent to-transparent opacity-80"></div>
-                            <span class="absolute top-3 left-3 px-2.5 py-1 rounded-md bg-darkBg/80 backdrop-blur-md text-neonCyan font-mono text-[10px] font-bold border border-slate-700">
-                                ${proj.badge}
-                            </span>
-                        </div>
-
-                        <!-- Card Body -->
-                        <div class="p-6 space-y-3">
-                            <h3 class="font-bold text-lg text-slate-100 group-hover:text-neonCyan transition">${proj.title}</h3>
-                            <p class="text-xs text-slate-400 leading-relaxed line-clamp-2">${proj.description}</p>
-                            
-                            <div class="flex flex-wrap gap-1.5 pt-2">
-                                ${tagsHtml}
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Card Actions Footer -->
-                    <div class="px-6 py-4 border-t border-slate-800/80 flex items-center justify-between">
-                        <button onclick="openProjectModal('${proj.id}')" class="text-xs font-semibold text-neonCyan hover:underline flex items-center gap-1.5">
-                            <span>Inspect Project</span>
-                            <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                        </button>
-                        <div class="flex items-center gap-3 text-slate-400 text-xs">
-                            <a href="${proj.githubUrl}" target="_blank" class="hover:text-white transition"><i class="fa-brands fa-github"></i></a>
-                            <a href="${proj.demoUrl}" target="_blank" class="hover:text-neonCyan transition"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function filterProjects(cat, btn) {
-            activeCategoryFilter = cat;
-            document.querySelectorAll('.proj-filter-btn').forEach(b => {
-                b.className = 'proj-filter-btn px-4 py-2 rounded-lg text-xs font-semibold glass-card text-slate-400 hover:text-white transition';
-            });
-            btn.className = 'proj-filter-btn px-4 py-2 rounded-lg text-xs font-semibold bg-neonCyan/20 border border-neonCyan/50 text-neonCyan transition';
-            renderProjects();
-        }
-
-        function filterProjectsByTag(tagName) {
-            activeTagFilter = tagName;
-            document.getElementById('active-tag-banner').classList.remove('hidden');
-            document.getElementById('active-tag-banner').classList.add('flex');
-            document.getElementById('active-tag-name').innerText = tagName;
-            
-            // Scroll down to projects smooth
-            document.getElementById('projects').scrollIntoView({ behavior: 'smooth' });
-            renderProjects();
-        }
-
-        function clearTagFilter() {
-            activeTagFilter = null;
-            document.getElementById('active-tag-banner').classList.add('hidden');
-            document.getElementById('active-tag-banner').classList.remove('flex');
-            renderProjects();
-        }
-
-        function resetAllFilters() {
-            activeTagFilter = null;
-            activeCategoryFilter = 'all';
-            document.getElementById('project-search').value = '';
-            document.getElementById('active-tag-banner').classList.add('hidden');
-            renderProjects();
-        }
-
-        function handleProjectSearch() {
-            renderProjects();
-        }
-
-        function openProjectModal(projId) {
-            const proj = projectsData.find(p => p.id === projId);
-            if(!proj) return;
-
-            document.getElementById('modal-project-title').innerText = proj.title;
-            document.getElementById('modal-project-badge').innerText = proj.badge;
-            document.getElementById('modal-project-img').src = proj.image;
-            document.getElementById('modal-project-role').innerText = proj.role;
-            document.getElementById('modal-project-year').innerText = proj.year;
-            document.getElementById('modal-project-impact').innerText = proj.impact;
-            document.getElementById('modal-project-desc').innerText = proj.description;
-
-            const tagsContainer = document.getElementById('modal-project-tags');
-            tagsContainer.innerHTML = proj.tags.map(t => `
-                <span class="px-2.5 py-1 rounded-md bg-slate-800 text-neonCyan text-xs font-mono border border-slate-700">${t}</span>
-            `).join('');
-
-            document.getElementById('modal-github-link').href = proj.githubUrl;
-            document.getElementById('modal-demo-link').href = proj.demoUrl;
-
-            document.getElementById('project-modal').classList.remove('hidden');
-        }
-
-        function closeProjectModal() {
-            document.getElementById('project-modal').classList.add('hidden');
-        }
-
-        function openResumeModal() {
-            document.getElementById('resume-modal').classList.remove('hidden');
-        }
-
-        function closeResumeModal() {
-            document.getElementById('resume-modal').classList.add('hidden');
-        }
-
-        function toggleThemeMenu() {
-            const dropdown = document.getElementById('theme-dropdown');
-            dropdown.classList.toggle('hidden');
-        }
-
-        function setTheme(theme) {
-            document.documentElement.classList.remove('light', 'matrix');
-            const themeLabel = document.getElementById('theme-label');
-            const themeIcon = document.getElementById('theme-icon');
-
-            if (theme === 'light') {
-                document.documentElement.classList.add('light');
-                themeLabel.innerText = 'Light';
-                themeIcon.className = 'fa-solid fa-sun text-amber-400';
-            } else if (theme === 'matrix') {
-                document.documentElement.classList.add('matrix');
-                themeLabel.innerText = 'Matrix';
-                themeIcon.className = 'fa-solid fa-terminal text-matrixGreen';
-            } else {
-                themeLabel.innerText = 'Dark';
-                themeIcon.className = 'fa-solid fa-moon text-neonCyan';
-            }
-
-            document.getElementById('theme-dropdown').classList.add('hidden');
-            showToast(`Switched theme to ${theme.toUpperCase()}`);
-        }
-
-        function toggleMobileMenu() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        }
-
-        function copyEmailToClipboard() {
-            const emailText = document.getElementById('my-email').innerText;
-            const tempInput = document.createElement('input');
-            tempInput.value = emailText;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
-            showToast('Email address copied to clipboard!');
-        }
-
-        function handleContactSubmit(event) {
-            event.preventDefault();
-            const name = document.getElementById('form-name').value;
-            showToast(`Thank you ${name}! Your message has been dispatched.`);
-            document.getElementById('contact-form').reset();
-        }
-
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-message').innerText = message;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            toast.classList.add('translate-y-0', 'opacity-100');
-
-            setTimeout(() => {
-                toast.classList.remove('translate-y-0', 'opacity-100');
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
-        }
-
-        function initCanvasBackground() {
-            const canvas = document.getElementById('bg-canvas');
-            const ctx = canvas.getContext('2d');
-
-            let width = canvas.width = window.innerWidth;
-            let height = canvas.height = window.innerHeight;
-
-            window.addEventListener('resize', () => {
-                width = canvas.width = window.innerWidth;
-                height = canvas.height = window.innerHeight;
-            });
-
-            const particles = [];
-            const particleCount = Math.floor(width / 25);
-
-            for (let i = 0; i < particleCount; i++) {
-                particles.push({
-                    x: Math.random() * width,
-                    y: Math.random() * height,
-                    vx: (Math.random() - 0.5) * 0.6,
-                    vy: (Math.random() - 0.5) * 0.6,
-                    radius: Math.random() * 2 + 1,
-                    alpha: Math.random() * 0.5 + 0.2
-                });
-            }
-
-            function animateCanvas() {
-                ctx.clearRect(0, 0, width, height);
-
-                particles.forEach((p, index) => {
-                    p.x += p.vx;
-                    p.y += p.vy;
-
-                    if (p.x < 0) p.x = width;
-                    if (p.x > width) p.x = 0;
-                    if (p.y < 0) p.y = height;
-                    if (p.y > height) p.y = 0;
-
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(6, 182, 212, ${p.alpha})`;
-                    ctx.fill();
-
-                    // Connect lines
-                    for (let j = index + 1; j < particles.length; j++) {
-                        const p2 = particles[j];
-                        const dx = p.x - p2.x;
-                        const dy = p.y - p2.y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-
-                        if (dist < 120) {
-                            ctx.beginPath();
-                            ctx.moveTo(p.x, p.y);
-                            ctx.lineTo(p2.x, p2.y);
-                            ctx.strokeStyle = `rgba(139, 92, 246, ${0.15 * (1 - dist / 120)})`;
-                            ctx.lineWidth = 0.6;
-                            ctx.stroke();
-                        }
-                    }
-                });
-
-                requestAnimationFrame(animateCanvas);
-            }
-
-            animateCanvas();
-        }
-
-        /* Initial Setup */
-        window.onload = function() {
-            renderTechChips('all');
-            renderProjects();
-            initCanvasBackground();
-        };
-    </script>
 </body>
+
 </html>

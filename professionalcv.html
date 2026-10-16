@@ -4,8 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Professional CV Generator - Rwanda</title>
-<!-- PDF: html2pdf | Word: docx (builds a real .docx) | Word preview: docx-preview -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<!-- PDF: jsPDF + autotable (preview: pdf.js) | Word: docx (builds a real .docx) | Word preview: docx-preview -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@7.8.2/build/index.js"></script>
 <script>window.DocxLib = window.docx; /* keep docx-preview (same global name) from overwriting it */</script>
@@ -36,17 +38,12 @@ button.secondary:hover{background-color:#777;color:white}
 .row small{display:block;font-size:11px;font-weight:bold;color:#9fd;margin-bottom:3px}
 .tabs{display:flex;gap:8px;margin-bottom:10px}.tabs button{flex:1}
 .tabs button.on{background:aqua;color:#000}
+#pdf-pages{max-height:70vh;overflow:auto;background:#555;padding:8px;border-radius:8px}
 #pdf-frame{width:100%;height:70vh;border:0;background:#fff;border-radius:8px}
+.row.rw{grid-template-columns:1fr 1fr}
+.row.rw>div:nth-child(5),.row.rw>button{grid-column:1/-1}
+.row.rw>button{width:100%;height:34px}
 #docx-view{background:#fff;color:#000;border-radius:8px;max-height:70vh;overflow:auto;padding:10px}
-/* CV styles (used for PDF) - kept off-screen */
-#cv-holder{position:absolute;left:-9999px;top:0}
-#cv-content{width:700px;background:#fff;color:#000;font-family:Arial,sans-serif;font-size:13px;line-height:1.6;padding:10px}
-.cv-main-title{text-align:center;font-weight:bold;font-size:16px;margin-bottom:15px;text-transform:uppercase}
-.cv-header-title{font-weight:bold;font-size:13px;margin-top:15px;margin-bottom:8px;text-transform:uppercase}
-table.cv-table{width:100%;border-collapse:collapse;margin:5px 0 15px}
-table.cv-table th,table.cv-table td{border:1px solid #000;padding:6px 8px;text-align:left;font-size:13px}
-table.cv-table tr{page-break-inside:avoid}
-ul.cv-list{margin:5px 0 15px 20px}
 .dp{display:flex;gap:4px}.dp select{padding:10px 4px;min-width:0}
 #toast{display:none;position:fixed;left:50%;bottom:20px;transform:translateX(-50%);width:calc(100% - 30px);max-width:520px;background:#a02020;color:#fff;padding:12px 16px;border-radius:8px;font-size:14px;font-weight:bold;z-index:99;box-shadow:0 4px 15px rgba(0,0,0,.6);text-align:center}
 @media(max-width:480px){body{padding:10px}.container{padding:15px}.row,.row.r4,.row.r2{grid-template-columns:1fr 1fr}.row button{grid-column:1/-1;padding:6px}}
@@ -61,27 +58,34 @@ ul.cv-list{margin:5px 0 15px 20px}
   <div class="form-step" id="step-2"><h2>STEP 2: EDUCATION BACKGROUND</h2><div id="f-edu"></div>
     <div class="btn-container"><button class="secondary" onclick="go(2,1)">Back</button><button onclick="go(2,3)">Next</button></div></div>
 
-  <div class="form-step" id="step-3"><h2>STEP 3: CERTIFICATIONS</h2>
+  <div class="form-step" id="step-3"><h2>STEP 3: PROFESSIONAL BACKGROUND</h2>
+    <div class="form-group"><label>Do you have a professional background (work experience)?</label>
+      <select id="has-work"><option value="">Select an answer</option><option>Yes</option><option>No</option></select></div>
+    <div id="work-box" hidden><p class="hint">Add your jobs, internships or volunteer work, starting with the most recent.</p>
+      <div id="rows-work"></div><button class="secondary" type="button" onclick="addRow('work')">+ Add another position</button></div>
+    <div class="btn-container"><button class="secondary" onclick="go(3,2)">Back</button><button onclick="go(3,4)">Next</button></div></div>
+
+  <div class="form-step" id="step-4"><h2>STEP 4: CERTIFICATIONS</h2>
     <p class="hint">Optional. Add diplomas, degrees, TVET/RTB certificates, ICT, language, first aid, training or any other certificate you hold.</p>
     <div id="rows-cert"></div>
     <button class="secondary" type="button" onclick="addRow('cert')">+ Add certification</button>
-    <div class="btn-container"><button class="secondary" onclick="go(3,2)">Back</button><button onclick="go(3,4)">Next</button></div></div>
+    <div class="btn-container"><button class="secondary" onclick="go(4,3)">Back</button><button onclick="go(4,5)">Next</button></div></div>
 
-  <div class="form-step" id="step-4"><h2>STEP 4: SKILLS, LANGUAGES &amp; HOBBIES</h2>
+  <div class="form-step" id="step-5"><h2>STEP 5: SKILLS, LANGUAGES &amp; HOBBIES</h2>
     <div class="form-group"><label>Other Skills (comma separated):</label><textarea id="skills" rows="3" placeholder="Computer skills, Teamwork, Communication"></textarea></div>
     <h3>Languages</h3><p class="hint">For each language, choose how well you can write, read and speak it.</p><div id="rows-lang"></div>
     <button class="secondary" type="button" onclick="addRow('lang')">+ Add language</button>
     <div class="form-group" style="margin-top:15px"><label>Hobbies (comma separated):</label><textarea id="hobbies" rows="3" placeholder="Reading, Coding, Football"></textarea></div>
-    <div class="btn-container"><button class="secondary" onclick="go(4,3)">Back</button><button onclick="go(4,5)">Next</button></div></div>
+    <div class="btn-container"><button class="secondary" onclick="go(5,4)">Back</button><button onclick="go(5,6)">Next</button></div></div>
 
-  <div class="form-step" id="step-5"><h2>STEP 5: REFEREES (3 Required)</h2><div id="f-ref"></div>
-    <div class="btn-container"><button class="secondary" onclick="go(5,4)">Back</button><button onclick="generate()">Complete &amp; Generate CV</button></div></div>
+  <div class="form-step" id="step-6"><h2>STEP 6: REFEREES (3 Required)</h2><div id="f-ref"></div>
+    <div class="btn-container"><button class="secondary" onclick="go(6,5)">Back</button><button onclick="generate()">Complete &amp; Generate CV</button></div></div>
 
   <div id="result" style="display:none">
     <h2>YOUR CV IS READY</h2>
     <div class="tabs"><button id="t-pdf" class="on" onclick="tab('pdf')">PDF preview</button><button id="t-docx" onclick="tab('docx')">Word (.docx) preview</button></div>
     <p class="hint" id="status"></p>
-    <div id="p-pdf"><iframe id="pdf-frame" title="PDF preview"></iframe></div>
+    <div id="p-pdf"><div id="pdf-pages"></div><iframe id="pdf-frame" style="display:none" title="PDF preview"></iframe></div>
     <div id="p-docx" style="display:none"><div id="docx-view"></div></div>
     <div class="btn-container"><button onclick="dl('pdf')" style="flex:1">Download PDF</button><button onclick="dl('docx')" style="flex:1;background:#004085">Download Word (.docx)</button></div>
     <div class="btn-container"><button class="secondary" onclick="editAgain()">&larr; Edit details</button></div>
@@ -89,7 +93,6 @@ ul.cv-list{margin:5px 0 15px 20px}
 </div>
 
 <div id="toast"></div>
-<div id="cv-holder"><div id="cv-content"></div></div>
 <datalist id="schools"></datalist>
 <datalist id="combos"><option value="MPC"><option value="PCB"><option value="MCB"><option value="MEG"><option value="HEG"><option value="HEL"><option value="Accounting"><option value="Software Development"><option value="Construction"><option value="Electricity"><option value="Automobile Technology"><option value="Medical Laboratory Technology"><option value="Tourism"><option value="Fashion Design"><option value="Carpentry"></datalist>
 <datalist id="certs">
@@ -165,6 +168,8 @@ const levels = [ // [id, form heading, certificate options]
 ];
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const YEARS = Array.from({length: new Date().getFullYear() + 6 - 1960}, (_, i) => `<option>${new Date().getFullYear() + 5 - i}</option>`).join('');
+const wDate = c => { const [m, y] = c.querySelectorAll('select'); return y.value === 'Present' ? 'Present' : (y.value && m.value ? y.value + '-' + m.value : ''); };
+const fmtW = x => x === 'Present' ? 'Present' : fmtM(x);
 const ymOf = c => { const [m, y] = c.querySelectorAll('select'); return y.value && m.value ? y.value + '-' + m.value : ''; };
 const eduVals = r => [ymOf(r.children[0]), ymOf(r.children[1]), r.children[2].querySelector('input').value.trim()];
 const grades = ['Excellent','Very good','Good','Fair'];
@@ -185,6 +190,7 @@ $('f-edu').innerHTML = '<p class="hint">For each level choose the certificate, t
 levels.forEach(l => { addRow('edu-' + l[0], [], false); if (l[2].length === 1) $(l[0] + '-cert').value = l[2][0]; });
 $('dob').max = minDob().toLocaleDateString('en-CA');
 $('national').inputMode = 'numeric';
+$('has-work').onchange = () => { const y = $('has-work').value === 'Yes'; $('work-box').hidden = !y; if (y && !$('rows-work').children.length) addRow('work', [], false); };
 $('res-country').onchange = () => { const rw = $('res-country').value === 'Rwanda'; $('res-rw').hidden = !rw; $('res-other').hidden = rw; };
 $('res-district').onchange = () => { $('res-sector').innerHTML = '<option value="">Select sector</option>' + (RW[$('res-district').value] || []).map(x => `<option>${x}</option>`).join(''); };
 $('f-ref').innerHTML = [1,2,3].map(n => `<h3>Referee ${n}</h3>` +
@@ -196,12 +202,16 @@ function addRow(kind, vals = [], removable = true) {
   const r = document.createElement('div');
   const cell = (label, inner) => `<div><small>${label}</small>${inner}</div>`;
   const inp = (label, ph, val, extra = '', opt = true) => cell(label, `<input class="${opt ? 'opt' : ''}" ${extra} placeholder="${ph}" value="${esc(val || '')}">`);
-  const ym = label => cell(label, `<div class="dp"><select data-l="${label} - month"><option value="">Month</option>${MONTHS.map((m, i) => `<option value="${String(i + 1).padStart(2, '0')}">${m}</option>`).join('')}</select><select data-l="${label} - year"><option value="">Year</option>${YEARS}</select></div>`);
+  const ym = (label, end = false) => cell(label, `<div class="dp"><select class="${end ? 'opt' : ''}" data-l="${label} - month"><option value="">Month</option>${MONTHS.map((m, i) => `<option value="${String(i + 1).padStart(2, '0')}">${m}</option>`).join('')}</select><select data-l="${label} - year"><option value="">Year</option>${end ? '<option value="Present">Present</option>' : ''}${YEARS}</select></div>`);
   const sel = (label, val) => cell(label, `<select class="opt">${grades.map(g => `<option${g === val ? ' selected' : ''}>${g}</option>`).join('')}</select>`);
   r.className = 'row';
   if (kind.startsWith('edu')) {
     r.dataset.edu = 1;
     r.innerHTML = ym('Start date') + ym('End date') + inp('School where you completed it', 'Choose or type school', vals[2], 'list="schools"', false);
+  } else if (kind === 'work') {
+    r.className = 'row rw'; r.dataset.work = 1;
+    r.innerHTML = inp('Position / job title', 'e.g. Teacher, Intern', vals[0], '', false) + inp('Employer / organisation', 'Company or institution', vals[1], '', false)
+      + ym('Start date') + ym('End date', true) + inp('Main duties (optional)', 'e.g. Taught mathematics to S1-S3', vals[2]);
   } else if (kind.startsWith('tr-')) {
     r.className = 'row r2';
     r.innerHTML = inp('Transferred from (school)', 'Choose or type school', vals[0], 'list="schools"', false) + inp('Year of transfer', 'e.g. 2022', vals[1], 'type="number" min="1980" max="2100"', false);
@@ -211,7 +221,7 @@ function addRow(kind, vals = [], removable = true) {
     r.className = 'row r4';
     r.innerHTML = inp('Language', 'e.g. French', vals[0]) + sel('Writing', vals[1]) + sel('Reading', vals[2]) + sel('Speaking', vals[3]);
   }
-  r.insertAdjacentHTML('beforeend', removable ? '<button type="button" title="Remove" onclick="this.parentNode.remove()">&times;</button>' : '<div></div>');
+  r.insertAdjacentHTML('beforeend', removable ? `<button type="button" title="Remove" onclick="this.parentNode.remove()">${kind === 'work' ? 'Remove this position' : '&times;'}</button>` : (kind === 'work' ? '' : '<div></div>'));
   $('rows-' + kind).appendChild(r);
 }
 addRow('cert');
@@ -244,6 +254,14 @@ function ok(n) {
       if (!(y >= +a.slice(0, 4) && y <= +b.slice(0, 4))) { warn(`Transfer year must be between ${a.slice(0, 4)} and ${b.slice(0, 4)} (the years you attended this level).`); return false; }
     }
   }
+  for (const r of document.querySelectorAll(`#step-${n} .row[data-work]`)) {
+    if (r.closest('[hidden]')) continue;
+    const c = r.querySelectorAll('.dp'), a = wDate(c[0]), b = wDate(c[1]);
+    if (!a) { warn('Choose the start month and year of the position.'); return false; }
+    if (!b) { warn('Choose the end month and year, or "Present".'); return false; }
+    if (a > now) { warn('The start date of a position cannot be in the future.'); return false; }
+    if (b !== 'Present' && b < a) { warn('The end date of a position cannot be before its start date.'); return false; }
+  }
   for (const id in RULES) if ($('step-' + n).contains($(id)) && !RULES[id][0]($(id).value.trim())) { warn(RULES[id][1]); $(id).focus(); return false; }
   return true;
 }
@@ -270,61 +288,105 @@ function collect() {
       return [fmtM(a) + ' - ' + fmtM(b), v(l[0] + '-cert') + (opt ? ` (${opt})` : ''),
         c + (tr.length ? '\n(' + tr.map(t => `Transferred from ${t[0]} in ${t[1]}`).join('; ') + ')' : '')];
     }),
+    work: v('has-work') === 'Yes' ? [...document.querySelectorAll('#rows-work .row')].map(r => {
+      const [t, o, du] = [...r.querySelectorAll('input')].map(x => x.value.trim()), c = r.querySelectorAll('.dp');
+      return [`${t} - ${o} (${fmtW(wDate(c[0]))} - ${fmtW(wDate(c[1]))})`, du];
+    }) : [],
     certs: rowsOf('cert').filter(a => a[1]).map(a => a[1] + (a[2] ? ' - ' + a[2] : '') + (a[0] ? ' (' + a[0] + ')' : '')), skills: list('skills'), langs: rowsOf('lang'), hobbies: list('hobbies'),
     refs: [1,2,3].map(n => [v(`ref${n}-name`), v(`ref${n}-contact`), v(`ref${n}-position`)]),
     name: v('names'), date: new Date().toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'})
   };
 }
 
-/* ---------- CV as HTML (source of the PDF) ---------- */
-const H = t => `<div class="cv-header-title">${t}</div>`;
-const T = (h, r) => `<table class="cv-table"><thead><tr>${h.map(x => `<th>${x}</th>`).join('')}</tr></thead><tbody>${r.map(a => `<tr>${a.map(x => `<td>${esc(x).replace(/\n/g, '<br>')}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
-const UL = a => `<ul class="cv-list">${a.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
+/* ---------- CV content shared by the PDF and Word builders ---------- */
 const DECL = 'I, the undersigned, certify that to the best of my knowledge, belief, the bio-data given correctly describes the true me according to the qualification.';
-const HEAD = {
-  edu: ['period','award/certificate','school'], cert: ['period','certification','institution / issuer'],
-  lang: ['language','writing','reading','speaking'], ref: ['Names','Contact','Position']
-};
+const HEAD = { edu: ['period','award/certificate','school'], lang: ['language','writing','reading','speaking'], ref: ['Names','Contact','Position'] };
+const COLS = { edu: [50, 58, 66], lang: [66, 36, 36, 36], ref: [60, 44, 70] }; // column widths in mm (page content = 174 mm)
 
-function cvHTML(d) {
-  return `<div class="cv-main-title">CURRICULUM VITAE</div><hr style="border:.5px solid #000;margin-bottom:15px">`
-    + H('PERSONAL IDENTIFICATION') + d.personal.map(p => `<p><strong>${p[0]}:</strong> ${esc(p[1])}</p>`).join('')
-    + H('EDUCATION BACKGROUND') + T(HEAD.edu, d.edu)
-    + (d.certs.length ? H('CERTIFICATIONS') + UL(d.certs) : '')
-    + H('OTHER SKILLS') + UL(d.skills)
-    + H('LANGUAGES') + T(HEAD.lang, d.langs)
-    + H('HOBBIES') + UL(d.hobbies)
-    + H('REFEREES') + T(HEAD.ref, d.refs)
-    + `<p style="margin-top:20px">${DECL}</p><p style="margin-top:15px">${esc(d.name)}</p><div style="height:60px"></div><p>${d.date}</p>`;
+/* ---------- CV as a real PDF (selectable text, full width tables, all pages) ---------- */
+function buildPdf(d) {
+  const doc = new window.jspdf.jsPDF({unit: 'mm', format: 'a4'});
+  const PW = 210, PH = 297, M = 18, W = PW - 2 * M, LH = 5.6;
+  let y = M;
+  const need = h => { if (y + h > PH - M) { doc.addPage(); y = M; } };
+  const font = (st, sz) => { doc.setFont('helvetica', st); doc.setFontSize(sz); };
+  const head = t => { need(16); y += 4; font('bold', 14); doc.text(t.toUpperCase(), M, y); y += 6.5; };
+  const para = (t, ind = 0) => { font('normal', 12); doc.splitTextToSize(t, W - ind).forEach(l => { need(LH); doc.text(l, M + ind, y); y += LH; }); };
+  const bullet = t => { font('normal', 12); doc.splitTextToSize(t, W - 10).forEach((l, i) => { need(LH); if (!i) doc.circle(M + 4, y - 1.5, .7, 'F'); doc.text(l, M + 8, y); y += LH; }); };
+  const kv = (k, val) => {
+    font('bold', 12); const lab = k + ': ', w = doc.getTextWidth(lab);
+    font('normal', 12); const ls = doc.splitTextToSize(val, W - w); need(LH);
+    font('bold', 12); doc.text(lab, M, y); font('normal', 12);
+    ls.forEach((l, i) => { if (i) need(LH); doc.text(l, M + w, y); y += LH; });
+  };
+  const table = (h, rows, cols) => {
+    need(24);
+    doc.autoTable({startY: y, head: [h], body: rows, theme: 'grid', tableWidth: W, margin: {left: M, right: M, top: M, bottom: M},
+      styles: {font: 'helvetica', fontSize: 12, cellPadding: 2, textColor: 0, lineColor: 0, lineWidth: .2, halign: 'left', valign: 'top', overflow: 'linebreak'},
+      headStyles: {fillColor: 255, textColor: 0, fontStyle: 'bold'},
+      columnStyles: Object.fromEntries(cols.map((c, i) => [i, {cellWidth: c}]))});
+    y = doc.lastAutoTable.finalY + 4;
+  };
+  font('bold', 14); doc.text('CURRICULUM VITAE', PW / 2, y + 2, {align: 'center'}); y += 6;
+  doc.setLineWidth(.4); doc.line(M, y, PW - M, y); y += 1;
+  head('Personal identification'); d.personal.forEach(p => kv(p[0], p[1]));
+  head('Education background'); table(HEAD.edu, d.edu, COLS.edu);
+  if (d.work.length) { head('Professional background'); d.work.forEach(w => { bullet(w[0]); if (w[1]) para(w[1], 8); }); }
+  if (d.certs.length) { head('Certifications'); d.certs.forEach(bullet); }
+  head('Other skills'); d.skills.forEach(bullet);
+  head('Languages'); table(HEAD.lang, d.langs, COLS.lang);
+  head('Hobbies'); d.hobbies.forEach(bullet);
+  head('Referees'); table(HEAD.ref, d.refs, COLS.ref);
+  y += 6; need(60); para(DECL); y += 5; font('normal', 12); doc.text(d.name, M, y); y += 24; doc.text(d.date, M, y);
+  return doc.output('blob');
 }
 
-/* ---------- CV as a real .docx ---------- */
+/* ---------- CV as a real .docx (fixed column widths, left-aligned text) ---------- */
 function buildDocx(d) {
-  const {Document, Paragraph, TextRun, Table, TableRow, TableCell, WidthType, AlignmentType} = window.DocxLib;
-  const tx = (t, b) => new TextRun({text: t, bold: !!b, font: 'Arial', size: 22});
-  const hd = t => new Paragraph({spacing:{before:240, after:100}, children:[tx(t.toUpperCase(), true)]});
-  const kv = (k, val) => new Paragraph({spacing:{after:60}, children:[tx(k + ': ', true), tx(val)]});
-  const li = t => new Paragraph({bullet:{level:0}, children:[tx(t)]});
-  const tbl = (h, r) => new Table({
-    width:{size:100, type:WidthType.PERCENTAGE},
-    rows:[h, ...r].map((a, i) => new TableRow({tableHeader: i === 0, children: a.map(x => new TableCell({
-      margins:{top:60, bottom:60, left:100, right:100}, children: x.split('\n').map(t => new Paragraph({children:[tx(t, i === 0)]}))}))}))
-  });
-  const gap = () => new Paragraph({children:[]});
+  const {Document, Paragraph, TextRun, Table, TableRow, TableCell, WidthType, AlignmentType, TableLayoutType} = window.DocxLib;
+  const TOTAL = 9638; // A4 width minus 2 cm margins, in twips
+  const tx = (t, b, sz = 24) => new TextRun({text: t, bold: !!b, font: 'Arial', size: sz});
+  const P = (kids, o = {}) => new Paragraph({alignment: AlignmentType.LEFT, ...o, children: kids});
+  const hd = t => P([tx(t.toUpperCase(), true, 28)], {spacing:{before:240, after:100}, keepNext:true});
+  const kv = (k, val) => P([tx(k + ': ', true), tx(val)], {spacing:{after:60}});
+  const li = t => P([tx(t)], {bullet:{level:0}, spacing:{after:40}});
+  const widths = cols => { const w = cols.map(c => Math.round(c * TOTAL / 174)); w[w.length - 1] += TOTAL - w.reduce((a, b) => a + b, 0); return w; };
+  const tbl = (h, r, cols) => { const w = widths(cols); return new Table({
+    width:{size:TOTAL, type:WidthType.DXA}, columnWidths:w, layout:TableLayoutType.FIXED,
+    rows:[h, ...r].map((a, i) => new TableRow({tableHeader: i === 0, cantSplit: true, children: a.map((x, j) => new TableCell({
+      width:{size:w[j], type:WidthType.DXA}, margins:{top:60, bottom:60, left:100, right:100},
+      children: x.split('\n').map(t => P([tx(t, i === 0)]))}))}))
+  }); };
+  const gap = () => P([]);
   const kids = [
-    new Paragraph({alignment: AlignmentType.CENTER, spacing:{after:200}, children:[new TextRun({text:'CURRICULUM VITAE', bold:true, size:32, font:'Arial'})]}),
+    P([tx('CURRICULUM VITAE', true, 28)], {alignment: AlignmentType.CENTER, spacing:{after:200}}),
     hd('Personal identification'), ...d.personal.map(p => kv(p[0], p[1])),
-    hd('Education background'), tbl(HEAD.edu, d.edu), gap(),
+    hd('Education background'), tbl(HEAD.edu, d.edu, COLS.edu), gap(),
+    ...(d.work.length ? [hd('Professional background'), ...d.work.flatMap(w => [li(w[0]), ...(w[1] ? [P([tx(w[1])], {indent:{left:720}, spacing:{after:60}})] : [])])] : []),
     ...(d.certs.length ? [hd('Certifications'), ...d.certs.map(li)] : []),
     hd('Other skills'), ...d.skills.map(li),
-    hd('Languages'), tbl(HEAD.lang, d.langs), gap(),
+    hd('Languages'), tbl(HEAD.lang, d.langs, COLS.lang), gap(),
     hd('Hobbies'), ...d.hobbies.map(li),
-    hd('Referees'), tbl(HEAD.ref, d.refs), gap(),
-    new Paragraph({spacing:{before:200, after:200}, children:[tx(DECL)]}),
-    new Paragraph({children:[tx(d.name)]}),
-    new Paragraph({spacing:{before:1000}, children:[tx(d.date)]})
+    hd('Referees'), tbl(HEAD.ref, d.refs, COLS.ref), gap(),
+    P([tx(DECL)], {spacing:{before:200, after:200}, keepNext:true}),
+    P([tx(d.name)], {keepNext:true}),
+    P([tx(d.date)], {spacing:{before:1000}})
   ];
-  return new Document({sections:[{children: kids}]});
+  return new Document({sections:[{properties:{page:{size:{width:11906, height:16838}, margin:{top:1134, bottom:1134, left:1134, right:1134}}}, children: kids}]});
+}
+
+/* ---------- Show every PDF page as an image (works on phones, where an embedded PDF shows only page 1) ---------- */
+async function showPdf(blob) {
+  const box = $('pdf-pages'); box.innerHTML = '';
+  try {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const pdf = await pdfjsLib.getDocument({data: await blob.arrayBuffer()}).promise;
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const pg = await pdf.getPage(i), vp = pg.getViewport({scale: 2}), c = document.createElement('canvas');
+      c.width = vp.width; c.height = vp.height; c.style.cssText = 'width:100%;height:auto;display:block;margin-bottom:8px;background:#fff';
+      await pg.render({canvasContext: c.getContext('2d'), viewport: vp}).promise; box.appendChild(c);
+    }
+  } catch (e) { console.error(e); const f = $('pdf-frame'); f.src = URL.createObjectURL(blob); f.style.display = 'block'; }
 }
 
 /* ---------- Generate, preview, download ---------- */
@@ -335,18 +397,11 @@ function tab(t) {
   $('t-pdf').className = t === 'pdf' ? 'on' : ''; $('t-docx').className = t === 'docx' ? 'on' : '';
 }
 async function generate() {
-  if (!ok(5)) return;
+  if (!ok(6)) return;
   const d = collect();
-  $('cv-content').innerHTML = cvHTML(d);
-  $('step-5').classList.remove('active'); $('box').classList.add('wide'); $('result').style.display = 'block';
+  $('step-6').classList.remove('active'); $('box').classList.add('wide'); $('result').style.display = 'block';
   pdfBlob = docxBlob = null; $('status').textContent = 'Preparing your PDF and Word files...'; tab('pdf');
-  try {
-    pdfBlob = await html2pdf().from($('cv-content')).set({
-      margin: 12, image:{type:'jpeg', quality:.98}, html2canvas:{scale:2, useCORS:true},
-      jsPDF:{unit:'mm', format:'a4', orientation:'portrait'}, pagebreak:{mode:['css','legacy'], avoid:'tr'}
-    }).outputPdf('blob');
-    $('pdf-frame').src = URL.createObjectURL(pdfBlob);
-  } catch (e) { console.error(e); }
+  try { pdfBlob = buildPdf(d); await showPdf(pdfBlob); } catch (e) { console.error(e); }
   try {
     docxBlob = await window.DocxLib.Packer.toBlob(buildDocx(d));
     $('docx-view').innerHTML = '';
@@ -361,7 +416,7 @@ function dl(type) {
   a.href = URL.createObjectURL(b); a.download = 'Curriculum_Vitae.' + type; a.click();
 }
 function editAgain() {
-  $('result').style.display = 'none'; $('box').classList.remove('wide'); $('step-5').classList.add('active');
+  $('result').style.display = 'none'; $('box').classList.remove('wide'); $('step-6').classList.add('active');
 }
 </script>
 </body>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Create account | NET Academy</title><link rel="stylesheet" href="auth.css"></head>
+<body>
+<a class="brand" href="index.html"><span class="logo">N</span>NET Academy</a>
+<main class="card">
+  <h1>Create your account</h1>
+  <p class="sub">Free. It takes less than a minute.</p>
+  <form id="f" novalidate>
+    <label for="name">Full name</label><input id="name" autocomplete="name" required>
+    <label for="email">Email</label><input id="email" type="email" autocomplete="email" inputmode="email" required>
+    <label for="pw">Password</label>
+    <div class="pw"><input id="pw" type="password" autocomplete="new-password" minlength="6" required><button type="button" id="show">Show</button></div>
+    <label for="pw2">Confirm password</label><input id="pw2" type="password" autocomplete="new-password" required>
+    <button class="btn" id="go" type="submit">Create account</button>
+    <div class="msg" id="msg" role="alert"></div>
+  </form>
+  <p class="alt">Already have an account? <a href="login.html">Log in</a></p>
+</main>
+<script type="module">
+import { sb, configured, friendly } from "./supabase-config.js";
+const $=id=>document.getElementById(id), msg=$("msg");
+const say=(t,c)=>{msg.textContent=t;msg.className="msg "+c};
+$("show").onclick=()=>{const p=$("pw"),h=p.type==="password";p.type=h?"text":"password";$("pw2").type=p.type;$("show").textContent=h?"Hide":"Show"};
+$("f").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const name=$("name").value.trim(),email=$("email").value.trim(),pw=$("pw").value;
+  if(!configured) return say("Setup needed: add your Supabase settings in supabase-config.js","err");
+  if(name.length<2) return say("Please enter your full name.","err");
+  if(pw.length<6) return say("Password must be at least 6 characters.","err");
+  if(pw!==$("pw2").value) return say("Passwords do not match.","err");
+  $("go").disabled=true;say("Creating your account...","ok");
+  const back=new URL("login.html",location.href).href;
+  const {data,error}=await sb.auth.signUp({email,password:pw,options:{data:{full_name:name},emailRedirectTo:back}});
+  if(error){say(friendly(error),"err");$("go").disabled=false;return}
+  if(data.user&&data.user.identities&&data.user.identities.length===0){say("This email already has an account. Try logging in.","err");$("go").disabled=false;return}
+  if(data.session){location.href="dashboard.html";return}
+  say("Account created! Check your email to confirm it, then log in.","ok");
+});
+</script></body></html>

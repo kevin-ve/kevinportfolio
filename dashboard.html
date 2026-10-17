@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard | NET Academy</title><link rel="stylesheet" href="auth.css"></head>
+<body>
+<a class="brand" href="index.html"><span class="logo">N</span>NET Academy</a>
+<main class="card" id="card" style="visibility:hidden">
+  <h1 id="hi">Welcome</h1>
+  <p class="sub" id="em"></p>
+  <p>Your account is working. Lessons will appear here soon.</p>
+  <button class="btn" id="out">Log out</button>
+</main>
+<script type="module">
+import { sb, configured } from "./supabase-config.js";
+const $=id=>document.getElementById(id);
+async function start(){
+  if(!configured){location.replace("login.html");return}
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session){location.replace("login.html");return}
+  const user=session.user;
+  let name=(user.user_metadata&&user.user_metadata.full_name)||"";
+  const {data}=await sb.from("profiles").select("full_name").eq("id",user.id).maybeSingle();
+  if(data&&data.full_name) name=data.full_name;
+  $("hi").textContent="Welcome, "+(name.split(" ")[0]||"learner")+"!";
+  $("em").textContent=user.email;
+  $("card").style.visibility="visible";
+}
+$("out").onclick=async()=>{await sb.auth.signOut();location.href="index.html"};
+start();
+</script></body></html>

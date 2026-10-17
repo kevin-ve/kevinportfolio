@@ -3,206 +3,319 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HTML Lesson 1: What is HTML? | NET Academy</title>
+<title>HTML Lesson 1: Foundations | NET Academy</title>
 <style>
-:root{--bg:#f6f8fc;--surface:#fff;--ink:#0e1a33;--muted:#54627e;--line:#dde3ef;--accent:#2540e8;--accent-d:#1b30b8;--accent-ink:#fff;--soft:#e8ecff;--code:#0e1a33;--code-ink:#e9eeff;--ok:#157347;--err:#c0262d;--sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--serif:Georgia,"Times New Roman",serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-@media (prefers-color-scheme:dark){:root{--bg:#0b1324;--surface:#131f3a;--ink:#eef2fb;--muted:#9dabc9;--line:#25335a;--accent:#8196ff;--accent-d:#9fb0ff;--accent-ink:#0b1324;--soft:#1b2a52;--code:#070d1b;--ok:#6fd39b;--err:#ff8a8f}}
+:root{--bg:#f4f6fa;--surface:#fff;--ink:#0e1a33;--muted:#55627e;--line:#d9e0ec;--accent:#1f3fd6;--accent-d:#162faa;--accent-ink:#fff;--soft:#e9edfb;--code:#0e1a33;--code-ink:#e9eeff;--ok:#157347;--okbg:#e4f5ec;--err:#b42329;--errbg:#fdeceb;--sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--serif:Georgia,"Times New Roman",serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+@media (prefers-color-scheme:dark){:root{--bg:#0a1222;--surface:#121e38;--ink:#eef2fb;--muted:#9aa8c7;--line:#243259;--accent:#8197ff;--accent-d:#a0b0ff;--accent-ink:#0a1222;--soft:#1a2850;--code:#070d1b;--ok:#6fd39b;--okbg:#12362a;--err:#ff8c91;--errbg:#3a1a20}}
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.7 var(--sans)}
-a{color:var(--accent)}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 var(--sans);min-height:100vh}
 :focus-visible{outline:3px solid #ffc83d;outline-offset:2px}
-header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
-.bar{max-width:760px;margin:0 auto;padding:0 18px;height:60px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{font:700 1.15rem var(--serif);text-decoration:none;color:var(--ink);display:flex;align-items:center;gap:8px}
-.logo{width:28px;height:28px;border-radius:7px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:700 .78rem var(--sans)}
-.links{display:flex;gap:6px}
-.links a,.links button{min-height:40px;padding:0 12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;font:600 .88rem var(--sans);text-decoration:none;display:inline-flex;align-items:center;cursor:pointer}
-main{max-width:760px;margin:0 auto;padding:28px 18px 80px;visibility:hidden}
-.crumb{color:var(--muted);font-size:.9rem;margin:0 0 6px}
-h1{font:700 clamp(1.9rem,6vw,2.6rem)/1.15 var(--serif);margin:0 0 12px;letter-spacing:-.01em}
-h2{font:700 1.5rem/1.25 var(--serif);margin:44px 0 10px}
-h3{margin:24px 0 6px;font-size:1.08rem}
-p{margin:0 0 14px}
-.goals{background:var(--soft);border-radius:12px;padding:16px 20px;margin:18px 0 0}
-.goals b{display:block;margin-bottom:6px}
-.goals ul{margin:0;padding-left:20px}
+header{position:sticky;top:0;z-index:10;background:var(--surface);border-bottom:1px solid var(--line)}
+.top{max-width:760px;margin:0 auto;padding:0 16px;height:54px;display:flex;align-items:center;gap:12px}
+.x{color:var(--muted);text-decoration:none;font-size:1.5rem;line-height:1;padding:6px 8px 6px 0}
+.ttl{flex:1;font-weight:650;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ttl span{color:var(--muted);font-weight:500}
+.pts{font:650 .85rem var(--sans);background:var(--soft);color:var(--accent);padding:5px 12px;border-radius:99px;font-variant-numeric:tabular-nums}
+.steps{max-width:760px;margin:0 auto;padding:0 16px 10px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.ph{font-size:.7rem;color:var(--muted);font-weight:600;letter-spacing:.02em}
+.ph i{display:block;height:5px;border-radius:9px;background:var(--line);margin-bottom:4px;overflow:hidden}
+.ph i b{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.ph.on{color:var(--ink)}
+main{max-width:760px;margin:0 auto;padding:22px 16px 120px;visibility:hidden}
+.page{display:none;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px 22px}
+.page.on{display:block}
+.eyebrow{margin:0 0 6px;font:700 .75rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+h1{font:700 clamp(1.6rem,5.5vw,2.1rem)/1.2 var(--serif);margin:0 0 14px}
+h3{margin:0 0 6px;font-size:1.02rem}
+p{margin:0 0 12px}ul,ol{margin:6px 0 12px;padding-left:22px}li{margin:3px 0}
+.lead{font-size:1.1rem}
+.meta{color:var(--muted);font-size:.9rem}
+.m{color:var(--muted)}
+.panel{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.key{border-left:4px solid var(--accent);background:var(--soft);padding:12px 16px;border-radius:0 10px 10px 0;margin:16px 0}
+.warn{border-left:4px solid var(--err);background:var(--errbg);padding:12px 16px;border-radius:0 10px 10px 0;margin:16px 0}
+.key b,.warn b{display:block;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
 code{font:.9em var(--mono);background:var(--soft);padding:2px 6px;border-radius:5px}
-pre{background:var(--code);color:var(--code-ink);border-radius:10px;padding:16px;overflow-x:auto;margin:10px 0 6px;font:.9rem/1.6 var(--mono)}
+pre{background:var(--code);color:var(--code-ink);border-radius:10px;padding:14px 16px;margin:10px 0 4px;overflow-x:auto;font:.9rem/1.65 var(--mono)}
 pre code{background:none;padding:0;color:inherit;font-size:inherit}
-.cap{font-size:.88rem;color:var(--muted);margin:0 0 16px}
-.tip{border-left:4px solid var(--accent);background:var(--surface);border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
-table{border-collapse:collapse;width:100%;margin:10px 0 16px;font-size:.95rem}
-th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
-th{background:var(--soft)}
-.scroll{overflow-x:auto}
-.lab{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:14px 0}
-.lab-h{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line);font-weight:600;font-size:.92rem}
-.lab-h button{min-height:36px;padding:0 12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;font:600 .85rem var(--sans);cursor:pointer}
-.lab textarea{display:block;width:100%;height:190px;border:0;resize:vertical;padding:14px;background:var(--code);color:var(--code-ink);font:16px/1.5 var(--mono)}
-.lab-l{padding:7px 14px;font-size:.78rem;color:var(--muted);background:var(--bg);border-block:1px solid var(--line)}
-.lab iframe{display:block;width:100%;height:190px;border:0;background:#fff}
-.q{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:14px 0}
-.q p{font-weight:600;margin:0 0 8px}
-.q label{display:flex;gap:10px;align-items:flex-start;padding:9px 6px;cursor:pointer;border-radius:8px}
-.q label:hover{background:var(--soft)}
-.q input{margin-top:6px;width:18px;height:18px;accent-color:var(--accent)}
-.q.right{border-color:var(--ok)}.q.wrong{border-color:var(--err)}
-.fb{margin:8px 0 0;font-size:.92rem;font-weight:600}
-.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 26px;border:0;border-radius:10px;background:var(--accent);color:var(--accent-ink);font:650 1rem var(--sans);cursor:pointer;text-decoration:none}
-.btn:hover{background:var(--accent-d)}
-.score{margin:14px 0 0;font-weight:700}
-.next{margin-top:40px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted)}
+.cap{font-size:.85rem;color:var(--muted);margin:0 0 14px}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0 14px}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}th{background:var(--bg)}
+.q{margin:20px 0;padding-top:18px;border-top:1px solid var(--line)}.q:first-of-type{border-top:0;padding-top:4px}
+.qt{font-weight:650;margin:0 0 10px}
+.opts{display:grid;gap:8px}
+.opt{min-height:48px;text-align:left;padding:10px 14px;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;font:500 .98rem var(--sans);cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt.sel{border-color:var(--accent);background:var(--soft)}
+.opt.good{border-color:var(--ok);background:var(--okbg)}.opt.bad{border-color:var(--err);background:var(--errbg)}
+.fb{margin:8px 0 0;font-size:.93rem;font-weight:600;min-height:1px}.fb.ok{color:var(--ok)}.fb.no{color:var(--err)}
+.lab ul.req{list-style:none;padding:0;margin:8px 0 12px}
+.req li{padding:3px 0 3px 26px;position:relative;font-size:.95rem;color:var(--muted)}
+.req li::before{content:"";position:absolute;left:2px;top:9px;width:13px;height:13px;border:2px solid var(--line);border-radius:50%}
+.req li.ok{color:var(--ink)}.req li.ok::before{background:var(--ok);border-color:var(--ok)}
+.ed{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:8px 0}
+.ed textarea{display:block;width:100%;height:170px;border:0;resize:vertical;padding:12px 14px;background:var(--code);color:var(--code-ink);font:16px/1.55 var(--mono)}
+.ed .l{padding:5px 12px;font-size:.75rem;color:var(--muted);background:var(--bg);border-block:1px solid var(--line);font-weight:600}
+.ed iframe{display:block;width:100%;height:120px;border:0;background:#fff}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.sm{min-height:42px;padding:0 16px;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;font:650 .9rem var(--sans);cursor:pointer}
+.hint{display:none;background:var(--soft);padding:10px 14px;border-radius:10px;margin:6px 0;font-size:.93rem}
+.btn{min-height:50px;padding:0 24px;border:0;border-radius:10px;background:var(--accent);color:var(--accent-ink);font:700 1rem var(--sans);cursor:pointer}
+.btn:disabled{background:var(--line);color:var(--muted);cursor:not-allowed}
+.res{margin:16px 0;padding:16px;border-radius:10px;border:1px solid var(--line);background:var(--bg)}
+.res .big{font:700 2rem/1.1 var(--serif)}.res .st{font-weight:700}.res.pass .st{color:var(--ok)}.res.fail .st{color:var(--err)}
+.rv{font-size:.92rem;margin:8px 0;padding:8px 0;border-top:1px solid var(--line)}
+.foot{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));z-index:10}
+.foot div{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:10px}
+.foot .btn{flex:1}.foot .sm{flex:0 0 auto}
+.cnt{font-size:.8rem;color:var(--muted);min-width:64px;text-align:center}
+.toast{position:fixed;left:50%;top:78px;transform:translate(-50%,-16px);background:var(--ink);color:var(--bg);font:650 .88rem var(--sans);padding:7px 16px;border-radius:99px;opacity:0;transition:.25s;pointer-events:none;z-index:20}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:480px){.page{padding:20px 16px}}
 </style>
 </head>
 <body>
-<header><div class="bar">
-  <a class="brand" href="dashboard.html"><span class="logo">N</span>NET Academy</a>
-  <div class="links"><a href="dashboard.html">Dashboard</a><button id="out" type="button">Log out</button></div>
-</div></header>
-
-<main id="page">
-  <p class="crumb">HTML and CSS &middot; Lesson 1 of 10 &middot; about 15 minutes</p>
-  <h1>What is HTML?</h1>
-  <p>Every website you have ever visited, from Google to your favourite news site, is built on HTML. In this lesson you will understand what it is and write your own first web page.</p>
-  <div class="goals"><b>By the end you will be able to:</b>
-    <ul><li>Explain what HTML is in your own words</li><li>Read and write an HTML tag</li><li>Build the basic skeleton of a web page</li><li>Use headings and paragraphs</li></ul>
-  </div>
-
-  <h2>1. What HTML means</h2>
-  <p><b>HTML</b> stands for <b>H</b>yper<b>T</b>ext <b>M</b>arkup <b>L</b>anguage. That sounds complicated, but the idea is simple:</p>
-  <p>HTML is a way of <b>labelling the parts of a page</b> so the browser (Chrome, Firefox, Safari) knows what each part is: "this is a title", "this is a paragraph", "this is a picture".</p>
-  <div class="tip"><b>Think of a Word document.</b> When you make some text a "Heading" or a "Bullet list", you are labelling it. HTML does the same thing, but you write the labels yourself using short words inside angle brackets.</div>
-  <p>HTML is <b>not</b> a programming language. It does not calculate or make decisions. It describes <i>what is on the page</i>. Later, CSS makes it pretty and JavaScript makes it interactive.</p>
-
-  <h2>2. Your first tag</h2>
-  <p>Labels in HTML are called <b>tags</b>. Most tags come in a pair: one to start and one to stop.</p>
-<pre><code>&lt;p&gt;Hello, world!&lt;/p&gt;</code></pre>
-  <p class="cap">This is a paragraph. The browser shows: Hello, world!</p>
-  <div class="scroll"><table>
-    <tr><th>Part</th><th>What it is</th></tr>
-    <tr><td><code>&lt;p&gt;</code></td><td>The <b>opening tag</b>. It says "a paragraph starts here".</td></tr>
-    <tr><td>Hello, world!</td><td>The <b>content</b>. This is what people see.</td></tr>
-    <tr><td><code>&lt;/p&gt;</code></td><td>The <b>closing tag</b>. Same name, but with a <code>/</code>. It says "the paragraph ends here".</td></tr>
-  </table></div>
-  <p>Together, the opening tag, the content and the closing tag are called an <b>element</b>.</p>
-  <div class="tip"><b>Common mistake:</b> forgetting the <code>/</code> in the closing tag, or forgetting to close the tag at all. If your page looks strange, check your closing tags first.</div>
-
-  <h2>3. Headings and paragraphs</h2>
-  <p>Headings go from <code>&lt;h1&gt;</code> (the biggest, most important) down to <code>&lt;h6&gt;</code> (the smallest). Use one <code>&lt;h1&gt;</code> per page for the main title.</p>
-<pre><code>&lt;h1&gt;My Favourite Foods&lt;/h1&gt;
-&lt;h2&gt;Fruits&lt;/h2&gt;
-&lt;p&gt;I love mangoes and pineapples.&lt;/p&gt;
-&lt;h2&gt;Drinks&lt;/h2&gt;
-&lt;p&gt;I enjoy fresh juice on hot days.&lt;/p&gt;</code></pre>
-  <p class="cap">One main title, two smaller headings, and a paragraph under each.</p>
-  <p>Two small facts to remember: the browser puts each paragraph on its own line, and <b>extra spaces and blank lines in your code are ignored</b>. Only the tags decide how things look.</p>
-
-  <h2>4. The skeleton of a web page</h2>
-  <p>Every complete web page has the same basic structure. Memorise this one, you will use it hundreds of times.</p>
-<pre><code>&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
-  &lt;head&gt;
-    &lt;meta charset="utf-8"&gt;
-    &lt;title&gt;My First Page&lt;/title&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;h1&gt;Hello!&lt;/h1&gt;
-    &lt;p&gt;Welcome to my page.&lt;/p&gt;
-  &lt;/body&gt;
-&lt;/html&gt;</code></pre>
-  <div class="scroll"><table>
-    <tr><th>Line</th><th>Meaning</th></tr>
-    <tr><td><code>&lt;!DOCTYPE html&gt;</code></td><td>Tells the browser "this page uses modern HTML".</td></tr>
-    <tr><td><code>&lt;html&gt;</code></td><td>Wraps the whole page. <code>lang="en"</code> says the page is in English.</td></tr>
-    <tr><td><code>&lt;head&gt;</code></td><td>Behind-the-scenes information. Visitors do not see this part.</td></tr>
-    <tr><td><code>&lt;title&gt;</code></td><td>The name shown on the browser tab.</td></tr>
-    <tr><td><code>&lt;body&gt;</code></td><td>Everything visitors <b>can see</b>: text, images, buttons.</td></tr>
-  </table></div>
-  <p>Notice the tags sit <b>inside</b> each other, like boxes inside boxes. The indentation (spaces at the start of lines) is not required, but it makes your code much easier to read.</p>
-
-  <h2>5. Try it yourself</h2>
-  <p>Edit the code in the box and watch the result change instantly. Nothing you do here can break anything, so experiment!</p>
-  <div class="lab">
-    <div class="lab-h"><span>Your code</span><button type="button" id="reset">Reset</button></div>
-    <label for="code" class="lab-l" style="display:block">HTML</label>
-    <textarea id="code" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea>
-    <div class="lab-l">Result</div>
-    <iframe id="view" title="Result" sandbox=""></iframe>
-  </div>
-  <h3>Practice challenges</h3>
-  <ol>
-    <li>Change the heading to <b>your own name</b>.</li>
-    <li>Add a second paragraph about your favourite hobby.</li>
-    <li>Add an <code>&lt;h2&gt;</code> heading called "My Goals" and a paragraph under it.</li>
-    <li>Remove a closing tag on purpose and see what happens. Then fix it.</li>
-  </ol>
-
-  <h2>6. Quick quiz</h2>
-  <div id="quiz"></div>
-  <button class="btn" id="check" type="button">Check my answers</button>
-  <p class="score" id="score" role="status"></p>
-
-  <h2>Summary</h2>
-  <ul>
-    <li>HTML labels the parts of a web page using <b>tags</b>.</li>
-    <li>Most tags come in pairs: <code>&lt;p&gt;</code> opens and <code>&lt;/p&gt;</code> closes.</li>
-    <li><code>&lt;h1&gt;</code> to <code>&lt;h6&gt;</code> are headings, <code>&lt;p&gt;</code> is a paragraph.</li>
-    <li>Every page has <code>html</code>, <code>head</code> and <code>body</code>. Visitors see only what is in the <code>body</code>.</li>
-  </ul>
-  <div class="next"><span>Next: Lesson 2, Text, links and lists (coming soon)</span><a href="dashboard.html">Back to dashboard</a></div>
-</main>
+<header>
+  <div class="top"><a class="x" href="dashboard.html" aria-label="Exit lesson">&times;</a><div class="ttl">Lesson 1 <span>&middot; Foundations of HTML</span></div><span class="pts" id="pts">0 pts</span></div>
+  <div class="steps" id="steps"></div>
+</header>
+<div class="toast" id="toast"></div>
+<main id="main"></main>
+<div class="foot"><div>
+  <button class="sm" id="back" type="button">Back</button>
+  <span class="cnt" id="cnt"></span>
+  <button class="btn" id="next" type="button">Continue</button>
+</div></div>
 
 <script type="module">
 import { sb, configured } from "./supabase-config.js";
 const $=id=>document.getElementById(id);
-
-/* Only logged-in users can open this page */
+const LESSON_NO=1;let uid=null;
 (async()=>{
   if(!configured){location.replace("login.html");return}
   const {data:{session}}=await sb.auth.getSession();
   if(!session){location.replace("login.html");return}
-  $("page").style.visibility="visible";
+  uid=session.user.id;
+  if(LESSON_NO>1){
+    const {data}=await sb.from("lesson_progress").select("lesson").eq("user_id",uid).eq("lesson",LESSON_NO-1).maybeSingle();
+    if(!data){location.replace("dashboard.html");return}
+  }
+  $("main").style.visibility="visible";
 })();
-$("out").onclick=async()=>{await sb.auth.signOut();location.href="index.html"};
+async function save(){
+  if(typeof sb==="undefined"||!uid)return;
+  await sb.from("lesson_progress").upsert({user_id:uid,lesson:LESSON_NO,points},{onConflict:"user_id,lesson"});
+}
 
-/* Live editor */
-const start='<!DOCTYPE html>\n<html lang="en">\n  <head>\n    <title>My First Page</title>\n  </head>\n  <body>\n    <h1>Hello!</h1>\n    <p>Welcome to my page.</p>\n  </body>\n</html>';
-const code=$("code"),view=$("view");
-const run=()=>{view.srcdoc=code.value};
-code.value=start;run();
-code.addEventListener("input",run);
-$("reset").onclick=()=>{code.value=start;run()};
+const E=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const C=s=>`<pre><code>${E(s)}</code></pre>`, I=s=>`<code>${E(s)}</code>`;
+const PH=["Intro","Concepts","Test","Lab","Final"];
 
-/* Quiz */
-const Q=[
- {q:"What does HTML stand for?",o:["HyperText Markup Language","High Tech Modern Language","Home Tool Making Language"],a:0,why:"HyperText Markup Language."},
- {q:"Which is the correct closing tag for a paragraph?",o:["<p/>","</p>","<end p>"],a:1,why:"A closing tag has the same name with a / in front: </p>."},
- {q:"Where do the things visitors can see go?",o:["Inside <head>","Inside <title>","Inside <body>"],a:2,why:"Everything visible goes inside <body>."}
+/* ============ LESSON CONTENT (edit this part for each new lesson) ============ */
+const pages=[
+{phase:0,type:"read",title:"Welcome to Lesson 1",label:"Introduction",html:`
+<p class="lead">HTML is the foundation of every website. In this lesson you will learn how a web page is structured, and you will write your first pages by hand.</p>
+<div class="panel"><h3>What you will learn</h3><ul><li>What HTML is and what it is used for</li><li>How tags and elements work</li><li>How to use headings and paragraphs correctly</li><li>The standard structure every web page follows</li></ul></div>
+<div class="panel"><h3>Why it matters</h3><p>Every website, from a school blog to a banking app, is built on HTML. Developers, designers, testers and cybersecurity analysts all read it every day. You cannot go far in web development, or in web security, without it.</p></div>
+<div class="panel"><h3>How this lesson works</h3><ol><li><b>Introduction check:</b> confirm you know what you are about to study.</li><li><b>Three core concepts:</b> read and study each one.</li><li><b>Concepts test:</b> you need 100% to unlock the lab.</li><li><b>Practice lab:</b> three exercises where you write real code.</li><li><b>Final test:</b> 100% is required to complete the lesson.</li></ol></div>
+<p class="meta">Level: Beginner &middot; Time: about 30 minutes &middot; Prerequisites: none</p>`},
+{phase:0,type:"quiz",title:"Introduction check",label:"Introduction",intro:"Confirm you understand what this lesson covers before you begin. Every answer must be correct to continue.",pts:5,qs:[
+ {q:"Which statement best describes HTML?",o:["A language that describes the structure of a web page","A language that makes web pages move and respond","A program that stores user passwords"],a:0,e:"HTML describes the structure and content of a page. Styling (CSS) and behaviour (JavaScript) come later."},
+ {q:"Which topic is NOT covered in this lesson?",o:["Tags and elements","Page structure","Databases and SQL"],a:2,e:"Databases are a later topic. This lesson covers tags, text structure and page structure."},
+ {q:"What score do you need to pass the final test?",o:["50%","70%","100%"],a:1,e:"The pass mark is 70%. You can retake the test as many times as you need."}]},
+
+{phase:1,type:"read",title:"Tags and elements",label:"Concept 1 of 3",html:`
+<p>A web page is plain text with <b>labels</b> added. The labels tell the browser what each piece of text is: a title, a paragraph, a link. These labels are called <b>tags</b>.</p>
+<p>Most tags come in pairs. One tag starts the label and one tag ends it:</p>
+${C("<p>Hello, world!</p>")}
+<p class="cap">Result in the browser: Hello, world!</p>
+<div class="tw"><table><tr><th>Part</th><th>Name</th><th>Role</th></tr>
+<tr><td>${I("<p>")}</td><td>Opening tag</td><td>Marks where the paragraph starts</td></tr>
+<tr><td>Hello, world!</td><td>Content</td><td>The text visitors see</td></tr>
+<tr><td>${I("</p>")}</td><td>Closing tag</td><td>Same name with a ${I("/")}. Marks where it ends</td></tr></table></div>
+<div class="key"><b>Key idea</b>The opening tag, the content and the closing tag together form one <b>element</b>.</div>
+<div class="warn"><b>Common mistake</b>Forgetting the ${I("/")} in the closing tag, or forgetting to close the tag at all. If a page looks wrong, check your closing tags first.</div>`},
+{phase:1,type:"read",title:"Headings and paragraphs",label:"Concept 2 of 3",html:`
+<p>Text on a page is organised with <b>headings</b> and <b>paragraphs</b>. Headings range from ${I("<h1>")} (most important) to ${I("<h6>")} (least important).</p>
+${C("<h1>My Favourite Foods</h1>\n<h2>Fruits</h2>\n<p>I love mangoes and pineapples.</p>\n<h2>Drinks</h2>\n<p>I enjoy fresh juice on hot days.</p>")}
+<p class="cap">One main title, two section headings, and a paragraph under each.</p>
+<div class="key"><b>Key idea</b>Headings describe <b>structure</b>, not size. Use ${I("<h1>")} once for the main title of the page. Choose the level by importance, never because you like how big it looks. Search engines and screen readers depend on this.</div>
+<p><b>Whitespace is ignored.</b> The browser collapses extra spaces and line breaks into a single space:</p>
+${C("<p>Hello      world\n      again</p>")}
+<p class="cap">Result in the browser: Hello world again</p>
+<div class="warn"><b>Common mistake</b>Adding spaces or blank lines to create gaps in the page. It will not work. Only tags control layout.</div>`},
+{phase:1,type:"read",title:"The structure of a page",label:"Concept 3 of 3",html:`
+<p>Every complete web page follows the same skeleton. You will write it in almost every project:</p>
+${C('<!DOCTYPE html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8">\n    <title>My First Page</title>\n  </head>\n  <body>\n    <h1>Hello!</h1>\n    <p>Welcome to my page.</p>\n  </body>\n</html>')}
+<div class="tw"><table><tr><th>Line</th><th>Purpose</th></tr>
+<tr><td>${I("<!DOCTYPE html>")}</td><td>Tells the browser this is a modern HTML page</td></tr>
+<tr><td>${I("<html>")}</td><td>Wraps everything. ${I('lang="en"')} declares the language</td></tr>
+<tr><td>${I("<head>")}</td><td>Information about the page. Not shown in the page itself</td></tr>
+<tr><td>${I("<title>")}</td><td>The text on the browser tab</td></tr>
+<tr><td>${I("<body>")}</td><td>Everything the visitor can see</td></tr></table></div>
+<div class="key"><b>Key idea</b>Elements can sit <b>inside</b> other elements. This is called <b>nesting</b>. The ${I("<head>")} and ${I("<body>")} are nested inside ${I("<html>")}. Indent nested code so it is easy to read.</div>
+<div class="panel"><h3>Next step</h3><p>After this concept you take the <b>Concepts test</b>. You must score <b>100%</b> to unlock the practice lab, so review anything you are unsure about first.</p></div>`},
+{phase:2,type:"final",title:"Concepts test",label:"Concepts test",pass:1,pts:5,
+ intro:"This test covers all three concepts you just studied.",
+ okMsg:()=>"You scored 100%. The practice lab is now unlocked.",qs:[
+ {q:"Which is the correct closing tag for <p>?",o:["<p/>","</p>","<end p>"],a:1,ref:"Concept 1: Tags and elements",e:"A closing tag repeats the name with a forward slash: </p>."},
+ {q:"In <p>Hello</p>, what is the word Hello called?",o:["The tag","The content","The attribute"],a:1,ref:"Concept 1: Tags and elements",e:"The text between the opening and closing tags is the content."},
+ {q:"What do we call the opening tag, content and closing tag together?",o:["An element","A browser","A heading"],a:0,ref:"Concept 1: Tags and elements",e:"Together they form an element."},
+ {q:"Which heading is the most important?",o:["<h6>","<h3>","<h1>"],a:2,ref:"Concept 2: Headings and paragraphs",e:"<h1> is the highest level. <h6> is the lowest."},
+ {q:"Why should you choose a heading level?",o:["To make text bigger","To show the structure of the page","To change the text colour"],a:1,ref:"Concept 2: Headings and paragraphs",e:"Heading levels communicate structure. Size is controlled later with CSS."},
+ {q:"What does the browser do with several spaces in a row?",o:["Shows all of them","Collapses them into one space","Shows an error"],a:1,ref:"Concept 2: Headings and paragraphs",e:"Browsers collapse whitespace into a single space."},
+ {q:"Where does content that visitors can see belong?",o:["Inside <head>","Inside <body>","Inside <title>"],a:1,ref:"Concept 3: The structure of a page",e:"Visible content belongs in <body>."},
+ {q:"What does the <title> element control?",o:["The main heading on the page","The text on the browser tab","The page background"],a:1,ref:"Concept 3: The structure of a page",e:"The title appears on the browser tab and in search results."},
+ {q:"Which nesting is correct?",o:["<html><head></head><body></body></html>","<head><html></html><body></body></head>","<body><html></html></body>"],a:0,ref:"Concept 3: The structure of a page",e:"The head and body are both nested inside html, in that order."}]},
+
+{phase:3,type:"lab",title:"Exercise 1: Your first paragraph",label:"Practice lab 1 of 3",pts:20,
+ task:"Write a paragraph that introduces yourself. Use the correct opening and closing tags.",
+ start:"<!-- Write your paragraph below -->\n",
+ reqs:[["Contains a paragraph element",v=>/<p>[\s\S]*<\/p>/i.test(v)],["The paragraph has text inside it",v=>/<p>\s*[^<\s][^<]*<\/p>/i.test(v)],["Every opening tag is closed",v=>(v.match(/<p>/gi)||[]).length===(v.match(/<\/p>/gi)||[]).length&&/<p>/i.test(v)]],
+ hint:"A paragraph starts with <p> and ends with </p>. Put your text between them.",sol:"<p>My name is Amina and I am learning web development.</p>"},
+{phase:3,type:"lab",title:"Exercise 2: Fix and extend",label:"Practice lab 2 of 3",pts:20,
+ task:"The title below is broken. Fix it, then add an h2 heading with a paragraph under it.",
+ start:"<h1>My Profile<h1>\n<p>I am learning to build websites.</p>\n",
+ reqs:[["The h1 title is closed correctly",v=>/<h1>[^<]+<\/h1>/i.test(v)],["Contains an h2 heading with text",v=>/<h2>[^<]+<\/h2>/i.test(v)],["Contains at least two paragraphs",v=>(v.match(/<p>[^<]+<\/p>/gi)||[]).length>=2]],
+ hint:"The closing tag of the title should be </h1>. Then add <h2>About me</h2> and a new <p>...</p> below it.",sol:"<h1>My Profile</h1>\n<p>I am learning to build websites.</p>\n<h2>About me</h2>\n<p>I am a beginner developer.</p>"},
+{phase:3,type:"lab",title:"Exercise 3: Build a full page",label:"Practice lab 3 of 3",pts:20,
+ task:"Write a complete HTML page from scratch using the skeleton from Concept 3.",
+ start:"",
+ reqs:[["Starts with the doctype",v=>/<!doctype html>/i.test(v)],["The head comes before the body",v=>{const a=v.search(/<head>/i),b=v.search(/<body>/i);return a>-1&&b>a}],["The head contains a title with text",v=>/<head>[\s\S]*<title>[^<]+<\/title>[\s\S]*<\/head>/i.test(v)],["The body contains an h1 heading",v=>/<body>[\s\S]*<h1>[^<]+<\/h1>[\s\S]*<\/body>/i.test(v)],["The body contains a paragraph",v=>/<body>[\s\S]*<p>[^<]+<\/p>[\s\S]*<\/body>/i.test(v)],["Everything is wrapped in html",v=>/<html[^>]*>[\s\S]*<\/html>/i.test(v)]],
+ hint:"Start with <!DOCTYPE html>, then <html>, then <head> with a <title>, then <body> with an <h1> and a <p>. Close everything in reverse order.",sol:'<!DOCTYPE html>\n<html lang="en">\n  <head>\n    <title>My Page</title>\n  </head>\n  <body>\n    <h1>Hello!</h1>\n    <p>This is my first complete page.</p>\n  </body>\n</html>'},
+
+{phase:4,type:"final",title:"Final test",label:"Final test",pass:1,pts:5,
+ intro:"This is the last step of the lesson.",
+ okMsg:()=>"You scored 100%. Total points: "+points+" / "+MAX+". Next lesson: Text formatting, links and lists (coming soon).",qs:[
+ {q:"What does HTML describe?",o:["The structure and content of a web page","The speed of the internet","The design of a computer"],a:0,ref:"Introduction",e:"HTML describes structure and content."},
+ {q:"Which is the correct closing tag for <h2>?",o:["</h2>","<h2/>","<end h2>"],a:0,ref:"Concept 1: Tags and elements",e:"Closing tags repeat the name with a forward slash."},
+ {q:"Which of these is a complete element?",o:["<p>Hi","<p>Hi</p>","Hi</p>"],a:1,ref:"Concept 1: Tags and elements",e:"An element needs the opening tag, content and closing tag."},
+ {q:"How many h1 headings should a page normally have?",o:["None","One","As many as possible"],a:1,ref:"Concept 2: Headings and paragraphs",e:"One h1 gives the page a single clear main title."},
+ {q:"What does the browser do with five spaces between two words?",o:["Shows five spaces","Shows one space","Removes the words"],a:1,ref:"Concept 2: Headings and paragraphs",e:"Browsers collapse whitespace into one space."},
+ {q:"Where does visible page content go?",o:["<head>","<body>","<title>"],a:1,ref:"Concept 3: The structure of a page",e:"Visible content belongs in <body>."},
+ {q:"What does the <title> element control?",o:["The browser tab text","The first paragraph","The font size"],a:0,ref:"Concept 3: The structure of a page",e:"The title appears on the browser tab."},
+ {q:"What is wrong with this code: <h1>Welcome<h1> ?",o:["The closing tag is missing its slash","It should use h2","Nothing is wrong"],a:0,ref:"Concept 1: Tags and elements",e:"The closing tag must be </h1>."}]}
 ];
-const quiz=$("quiz");
-Q.forEach((it,i)=>{
-  const d=document.createElement("div");d.className="q";d.id="q"+i;
-  const p=document.createElement("p");p.textContent=(i+1)+". "+it.q;d.appendChild(p);
-  it.o.forEach((t,j)=>{
-    const l=document.createElement("label"),r=document.createElement("input");
-    r.type="radio";r.name="q"+i;r.value=j;l.appendChild(r);
-    const s=document.createElement("span");s.textContent=t;l.appendChild(s);d.appendChild(l);
-  });
-  const f=document.createElement("div");f.className="fb";d.appendChild(f);
-  quiz.appendChild(d);
+/* ============ END OF LESSON CONTENT ============ */
+
+/* ---------- engine ---------- */
+const N=pages.length,done=Array(N).fill(false);let cur=0,points=0;
+const MAX=pages.reduce((s,p)=>s+(p.type==="lab"?p.pts:(p.qs?p.qs.length*p.pts:0)),0);
+const main=$("main");
+function add(n){if(!n)return;points+=n;$("pts").textContent=points+" pts";const t=$("toast");t.textContent="+"+n+" points";t.classList.add("on");setTimeout(()=>t.classList.remove("on"),1000)}
+function complete(i){done[i]=true;refresh();if(i===N-1)save()}
+function mk(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
+
+pages.forEach((pg,i)=>{
+  const sec=mk("section","page");sec.dataset.i=i;
+  sec.appendChild(mk("p","eyebrow",pg.label));
+  sec.appendChild(mk("h1",null,pg.title));
+  if(pg.type==="read"){const d=mk("div");d.innerHTML=pg.html;sec.appendChild(d);done[i]=true}
+  if(pg.type==="quiz")buildQuiz(sec,pg,i);
+  if(pg.type==="lab")buildLab(sec,pg,i);
+  if(pg.type==="final")buildFinal(sec,pg,i);
+  main.appendChild(sec);
 });
-$("check").onclick=()=>{
-  let n=0;
-  Q.forEach((it,i)=>{
-    const box=$("q"+i),pick=document.querySelector('input[name="q'+i+'"]:checked'),fb=box.querySelector(".fb");
-    box.classList.remove("right","wrong");
-    if(!pick){fb.textContent="Pick an answer.";return}
-    if(+pick.value===it.a){n++;box.classList.add("right");fb.style.color="var(--ok)";fb.textContent="Correct! "+it.why}
-    else{box.classList.add("wrong");fb.style.color="var(--err)";fb.textContent="Not quite. "+it.why}
+
+function buildQuiz(sec,pg,i){
+  sec.appendChild(mk("p","m",pg.intro));let ok=0;
+  pg.qs.forEach((it,k)=>{
+    const box=mk("div","q");box.appendChild(mk("p","qt",(k+1)+". "+it.q));
+    const og=mk("div","opts"),fb=mk("div","fb");let missed=false,solved=false;
+    it.o.forEach((t,j)=>{
+      const b=mk("button","opt",t);b.type="button";
+      b.onclick=()=>{
+        if(solved)return;
+        if(j===it.a){solved=true;b.classList.add("good");fb.className="fb ok";fb.textContent="Correct. "+it.e;og.querySelectorAll(".opt").forEach(x=>x.disabled=true);add(missed?pg.pts/2:pg.pts);ok++;if(ok===pg.qs.length)complete(i)}
+        else{missed=true;b.classList.add("bad");b.disabled=true;fb.className="fb no";fb.textContent="Not quite. Try another answer."}
+      };og.appendChild(b);
+    });
+    box.appendChild(og);box.appendChild(fb);sec.appendChild(box);
   });
-  $("score").textContent="Score: "+n+" out of "+Q.length+(n===Q.length?" 🎉 Well done!":". Review the lesson and try again.");
-};
+}
+
+function buildLab(sec,pg,i){
+  sec.classList.add("lab");
+  sec.appendChild(mk("p",null,pg.task));
+  sec.appendChild(mk("p","m","Requirements:"));
+  const ul=mk("ul","req");pg.reqs.forEach(r=>ul.appendChild(mk("li",null,r[0])));sec.appendChild(ul);
+  const ed=mk("div","ed"),l1=mk("div","l","Your code"),ta=mk("textarea"),l2=mk("div","l","Result"),fr=mk("iframe");
+  ta.value=pg.start;ta.spellcheck=false;ta.setAttribute("autocapitalize","off");ta.setAttribute("autocorrect","off");ta.setAttribute("aria-label","Your code");
+  fr.title="Result";fr.setAttribute("sandbox","");fr.srcdoc=pg.start;
+  [l1,ta,l2,fr].forEach(x=>ed.appendChild(x));sec.appendChild(ed);
+  const tools=mk("div","tools"),hb=mk("button","sm","Show hint"),sb2=mk("button","sm","Show solution"),rb=mk("button","sm","Reset");
+  [hb,sb2,rb].forEach(b=>{b.type="button";tools.appendChild(b)});sec.appendChild(tools);
+  const hint=mk("div","hint",pg.hint);sec.appendChild(hint);
+  let usedSol=false;
+  const check=()=>{
+    fr.srcdoc=ta.value;let all=true;
+    [...ul.children].forEach((li,k)=>{const p=pg.reqs[k][1](ta.value);li.classList.toggle("ok",p);if(!p)all=false});
+    if(all&&!done[i]){add(usedSol?pg.pts/2:pg.pts);complete(i)}
+  };
+  ta.addEventListener("input",check);
+  hb.onclick=()=>{hint.style.display=hint.style.display==="block"?"none":"block"};
+  sb2.onclick=()=>{if(!done[i]&&!confirm("Show the solution? You will earn half the points for this exercise."))return;if(!done[i])usedSol=true;ta.value=pg.sol;check()};
+  rb.onclick=()=>{ta.value=pg.start;check()};
+  fr.srcdoc=pg.start;
+}
+
+function shuffle(a){for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a}
+function buildFinal(sec,pg,i){
+  const need=Math.round(pg.pass*100);
+  sec.appendChild(mk("p","m",pg.intro+" Answer all "+pg.qs.length+" questions, then submit. You need "+need+"% to continue. You can retake the test, and the order of questions and answers changes each time."));
+  const ans={},wrap=mk("div"),res=mk("div"),sub=mk("button","btn","Submit test");sub.type="button";let best=0;
+  const render=()=>{
+    wrap.innerHTML="";res.innerHTML="";sub.style.display="";sub.disabled=true;
+    Object.keys(ans).forEach(k=>delete ans[k]);
+    shuffle(pg.qs.map((q,k)=>k)).forEach((qi,n)=>{
+      const it=pg.qs[qi],box=mk("div","q");box.appendChild(mk("p","qt",(n+1)+". "+it.q));const og=mk("div","opts");
+      shuffle(it.o.map((t,j)=>j)).forEach(j=>{
+        const b=mk("button","opt",it.o[j]);b.type="button";
+        b.onclick=()=>{ans[qi]=j;og.querySelectorAll(".opt").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");sub.disabled=Object.keys(ans).length<pg.qs.length};
+        og.appendChild(b);
+      });
+      box.appendChild(og);wrap.appendChild(box);
+    });
+  };
+  sub.onclick=()=>{
+    const right=pg.qs.filter((it,k)=>ans[k]===it.a).length,pct=right/pg.qs.length,passed=pct>=pg.pass;
+    if(right>best){add((right-best)*pg.pts);best=right}
+    sub.style.display="none";wrap.innerHTML="";res.innerHTML="";
+    const box=mk("div","res "+(passed?"pass":"fail"));
+    box.appendChild(mk("div","big",right+" / "+pg.qs.length+"  ("+Math.round(pct*100)+"%)"));
+    box.appendChild(mk("div","st",passed?"Passed":"Not passed. "+need+"% is required."));
+    box.appendChild(mk("p","m",passed?pg.okMsg():"Every question must be correct to continue. Review the topics listed below, then retake the test."));
+    pg.qs.forEach((it,k)=>{
+      const ok=ans[k]===it.a,d=mk("div","rv");
+      d.textContent=passed?(k+1)+". Correct. "+it.e:(ok?"Correct: "+it.q:"Incorrect: "+it.q+"  Review: "+it.ref+".");
+      d.style.color=ok?"var(--ok)":"var(--err)";box.appendChild(d);
+    });
+    if(!passed){const rt=mk("button","btn","Retake test");rt.type="button";rt.style.marginTop="12px";rt.onclick=()=>{render()};box.appendChild(rt)}
+    res.appendChild(box);if(passed)complete(i);
+  };
+  sec.appendChild(wrap);sec.appendChild(sub);sec.appendChild(res);render();
+}
+
+/* ---------- navigation ---------- */
+const stepsEl=$("steps");
+PH.forEach(n=>{const d=mk("div","ph");d.innerHTML='<i><b></b></i>';d.appendChild(document.createTextNode(n));stepsEl.appendChild(d)});
+function refresh(){
+  document.querySelectorAll(".page").forEach((s,k)=>s.classList.toggle("on",k===cur));
+  [...stepsEl.children].forEach((el,p)=>{
+    const idx=pages.map((x,k)=>x.phase===p?k:-1).filter(k=>k>=0);
+    const d=idx.filter(k=>done[k]&&(pages[k].type!=="read"||k<cur||(k===cur))).length;
+    el.querySelector("b").style.width=Math.round(d/idx.length*100)+"%";el.classList.toggle("on",pages[cur].phase===p);
+  });
+  const last=cur===N-1;
+  $("back").style.visibility=cur===0?"hidden":"visible";
+  $("cnt").textContent=(cur+1)+" / "+N;
+  $("next").textContent=last?"Finish lesson":"Continue";
+  $("next").disabled=!done[cur];
+}
+$("next").onclick=()=>{if(cur===N-1){location.href="dashboard.html"}else{cur++;refresh();window.scrollTo(0,0)}};
+$("back").onclick=()=>{if(cur>0){cur--;refresh();window.scrollTo(0,0)}};
+refresh();
 </script>
 </body>
 </html>

@@ -6,8 +6,8 @@
 <main class="card" id="card" style="visibility:hidden">
   <h1 id="hi">Welcome</h1>
   <p class="sub" id="em"></p>
-  <p><b>Start learning</b></p>
-  <a class="btn" href="lesson-html-1.html" style="display:flex;align-items:center;justify-content:center;text-decoration:none;margin-top:8px">HTML Lesson 1: What is HTML?</a>
+  <p><b>HTML course</b><br><span class="sub" id="tot" style="margin:0"></span></p>
+  <div id="lessons"></div>
   <button class="btn" id="out">Log out</button>
 </main>
 <script type="module">
@@ -23,6 +23,19 @@ async function start(){
   if(data&&data.full_name) name=data.full_name;
   $("hi").textContent="Welcome, "+(name.split(" ")[0]||"learner")+"!";
   $("em").textContent=user.email;
+  const T=["What is HTML?","Text formatting and lists","Links and images","Tables","Forms and inputs","Semantic page layout","Attributes, div and span","Project: your personal page"];
+  const {data:rows}=await sb.from("lesson_progress").select("lesson,points").eq("user_id",user.id);
+  const got=new Map((rows||[]).map(r=>[r.lesson,r.points]));let tot=0;got.forEach(v=>tot+=v);
+  $("tot").textContent=got.size+" of "+T.length+" lessons complete, "+tot+" points";
+  T.forEach((t,i)=>{
+    const n=i+1,open=n===1||got.has(n-1),dn=got.has(n);
+    const el=document.createElement(open?"a":"button");el.className="btn";
+    el.style.cssText="display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;text-decoration:none;margin-top:8px";
+    if(open)el.href="lesson-html-"+n+".html";else el.disabled=true;
+    const l=document.createElement("span");l.textContent="Lesson "+n+": "+t;
+    const r=document.createElement("span");r.style.cssText="font-size:.8rem;white-space:nowrap";r.textContent=dn?"Completed":(open?"Start":"Locked");
+    el.append(l,r);if(dn)el.style.background="var(--ok)";$("lessons").appendChild(el);
+  });
   $("card").style.visibility="visible";
 }
 $("out").onclick=async()=>{await sb.auth.signOut();location.href="index.html"};

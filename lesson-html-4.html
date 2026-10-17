@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML Lesson 4: Tables | NET Academy</title>
+<style>
+:root{--bg:#f4f6fa;--surface:#fff;--ink:#0e1a33;--muted:#55627e;--line:#d9e0ec;--accent:#1f3fd6;--accent-d:#162faa;--accent-ink:#fff;--soft:#e9edfb;--code:#0e1a33;--code-ink:#e9eeff;--ok:#157347;--okbg:#e4f5ec;--err:#b42329;--errbg:#fdeceb;--sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--serif:Georgia,"Times New Roman",serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+@media (prefers-color-scheme:dark){:root{--bg:#0a1222;--surface:#121e38;--ink:#eef2fb;--muted:#9aa8c7;--line:#243259;--accent:#8197ff;--accent-d:#a0b0ff;--accent-ink:#0a1222;--soft:#1a2850;--code:#070d1b;--ok:#6fd39b;--okbg:#12362a;--err:#ff8c91;--errbg:#3a1a20}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 var(--sans);min-height:100vh}
+:focus-visible{outline:3px solid #ffc83d;outline-offset:2px}
+header{position:sticky;top:0;z-index:10;background:var(--surface);border-bottom:1px solid var(--line)}
+.top{max-width:760px;margin:0 auto;padding:0 16px;height:54px;display:flex;align-items:center;gap:12px}
+.x{color:var(--muted);text-decoration:none;font-size:1.5rem;line-height:1;padding:6px 8px 6px 0}
+.ttl{flex:1;font-weight:650;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ttl span{color:var(--muted);font-weight:500}
+.pts{font:650 .85rem var(--sans);background:var(--soft);color:var(--accent);padding:5px 12px;border-radius:99px;font-variant-numeric:tabular-nums}
+.steps{max-width:760px;margin:0 auto;padding:0 16px 10px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.ph{font-size:.7rem;color:var(--muted);font-weight:600;letter-spacing:.02em}
+.ph i{display:block;height:5px;border-radius:9px;background:var(--line);margin-bottom:4px;overflow:hidden}
+.ph i b{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.ph.on{color:var(--ink)}
+main{max-width:760px;margin:0 auto;padding:22px 16px 120px;visibility:hidden}
+.page{display:none;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px 22px}
+.page.on{display:block}
+.eyebrow{margin:0 0 6px;font:700 .75rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+h1{font:700 clamp(1.6rem,5.5vw,2.1rem)/1.2 var(--serif);margin:0 0 14px}
+h3{margin:0 0 6px;font-size:1.02rem}
+p{margin:0 0 12px}ul,ol{margin:6px 0 12px;padding-left:22px}li{margin:3px 0}
+.lead{font-size:1.1rem}
+.meta{color:var(--muted);font-size:.9rem}
+.m{color:var(--muted)}
+.panel{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:14px 0}
+.key{border-left:4px solid var(--accent);background:var(--soft);padding:12px 16px;border-radius:0 10px 10px 0;margin:16px 0}
+.warn{border-left:4px solid var(--err);background:var(--errbg);padding:12px 16px;border-radius:0 10px 10px 0;margin:16px 0}
+.key b,.warn b{display:block;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
+code{font:.9em var(--mono);background:var(--soft);padding:2px 6px;border-radius:5px}
+pre{background:var(--code);color:var(--code-ink);border-radius:10px;padding:14px 16px;margin:10px 0 4px;overflow-x:auto;font:.9rem/1.65 var(--mono)}
+pre code{background:none;padding:0;color:inherit;font-size:inherit}
+.cap{font-size:.85rem;color:var(--muted);margin:0 0 14px}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.93rem;margin:8px 0 14px}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}th{background:var(--bg)}
+.q{margin:20px 0;padding-top:18px;border-top:1px solid var(--line)}.q:first-of-type{border-top:0;padding-top:4px}
+.qt{font-weight:650;margin:0 0 10px}
+.opts{display:grid;gap:8px}
+.opt{min-height:48px;text-align:left;padding:10px 14px;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;font:500 .98rem var(--sans);cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt.sel{border-color:var(--accent);background:var(--soft)}
+.opt.good{border-color:var(--ok);background:var(--okbg)}.opt.bad{border-color:var(--err);background:var(--errbg)}
+.fb{margin:8px 0 0;font-size:.93rem;font-weight:600;min-height:1px}.fb.ok{color:var(--ok)}.fb.no{color:var(--err)}
+.lab ul.req{list-style:none;padding:0;margin:8px 0 12px}
+.req li{padding:3px 0 3px 26px;position:relative;font-size:.95rem;color:var(--muted)}
+.req li::before{content:"";position:absolute;left:2px;top:9px;width:13px;height:13px;border:2px solid var(--line);border-radius:50%}
+.req li.ok{color:var(--ink)}.req li.ok::before{background:var(--ok);border-color:var(--ok)}
+.ed{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:8px 0}
+.ed textarea{display:block;width:100%;height:170px;border:0;resize:vertical;padding:12px 14px;background:var(--code);color:var(--code-ink);font:16px/1.55 var(--mono)}
+.ed .l{padding:5px 12px;font-size:.75rem;color:var(--muted);background:var(--bg);border-block:1px solid var(--line);font-weight:600}
+.ed iframe{display:block;width:100%;height:120px;border:0;background:#fff}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.sm{min-height:42px;padding:0 16px;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;font:650 .9rem var(--sans);cursor:pointer}
+.hint{display:none;background:var(--soft);padding:10px 14px;border-radius:10px;margin:6px 0;font-size:.93rem}
+.btn{min-height:50px;padding:0 24px;border:0;border-radius:10px;background:var(--accent);color:var(--accent-ink);font:700 1rem var(--sans);cursor:pointer}
+.btn:disabled{background:var(--line);color:var(--muted);cursor:not-allowed}
+.res{margin:16px 0;padding:16px;border-radius:10px;border:1px solid var(--line);background:var(--bg)}
+.res .big{font:700 2rem/1.1 var(--serif)}.res .st{font-weight:700}.res.pass .st{color:var(--ok)}.res.fail .st{color:var(--err)}
+.rv{font-size:.92rem;margin:8px 0;padding:8px 0;border-top:1px solid var(--line)}
+.foot{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));z-index:10}
+.foot div{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:10px}
+.foot .btn{flex:1}.foot .sm{flex:0 0 auto}
+.cnt{font-size:.8rem;color:var(--muted);min-width:64px;text-align:center}
+.toast{position:fixed;left:50%;top:78px;transform:translate(-50%,-16px);background:var(--ink);color:var(--bg);font:650 .88rem var(--sans);padding:7px 16px;border-radius:99px;opacity:0;transition:.25s;pointer-events:none;z-index:20}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:480px){.page{padding:20px 16px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="top"><a class="x" href="dashboard.html" aria-label="Exit lesson">&times;</a><div class="ttl">Lesson 4 <span>&middot; Tables</span></div><span class="pts" id="pts">0 pts</span></div>
+  <div class="steps" id="steps"></div>
+</header>
+<div class="toast" id="toast"></div>
+<main id="main"></main>
+<div class="foot"><div>
+  <button class="sm" id="back" type="button">Back</button>
+  <span class="cnt" id="cnt"></span>
+  <button class="btn" id="next" type="button">Continue</button>
+</div></div>
+
+<script type="module">
+import { sb, configured } from "./supabase-config.js";
+const $=id=>document.getElementById(id);
+const LESSON_NO=4;let uid=null;
+(async()=>{
+  if(!configured){location.replace("login.html");return}
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session){location.replace("login.html");return}
+  uid=session.user.id;
+  if(LESSON_NO>1){
+    const {data}=await sb.from("lesson_progress").select("lesson").eq("user_id",uid).eq("lesson",LESSON_NO-1).maybeSingle();
+    if(!data){location.replace("dashboard.html");return}
+  }
+  $("main").style.visibility="visible";
+})();
+async function save(){
+  if(typeof sb==="undefined"||!uid)return;
+  await sb.from("lesson_progress").upsert({user_id:uid,lesson:LESSON_NO,points},{onConflict:"user_id,lesson"});
+}
+
+const E=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const C=s=>`<pre><code>${E(s)}</code></pre>`, I=s=>`<code>${E(s)}</code>`;
+const PH=["Intro","Concepts","Test","Lab","Final"];
+
+/* ============ LESSON CONTENT (edit this part for each new lesson) ============ */
+const cnt=(v,t,c)=>{const m=v.match(new RegExp("<"+t+">([\\s\\S]*?)</"+t+">","i"));return m?(m[1].match(new RegExp("<"+c+">[^<]+</"+c+">","gi"))||[]).length:0};
+const n=(v,re)=>(v.match(re)||[]).length;
+const HOW='<div class="panel"><h3>How this lesson works</h3><ol><li><b>Introduction check:</b> confirm what you will study.</li><li><b>Three core concepts:</b> read and study each one.</li><li><b>Concepts test:</b> 100% unlocks the lab.</li><li><b>Practice lab:</b> two coding exercises.</li><li><b>Final test:</b> 100% completes the lesson.</li></ol></div>';
+const intro=(lead,list,why,pre)=>({phase:0,type:"read",title:"Welcome",label:"Introduction",html:`<p class="lead">${lead}</p><div class="panel"><h3>What you will learn</h3><ul>${list.map(x=>"<li>"+x+"</li>").join("")}</ul></div><div class="panel"><h3>Why it matters</h3><p>${why}</p></div>${HOW}<p class="meta">Level: Beginner &middot; Time: about 30 minutes &middot; Prerequisites: ${pre}</p>`});
+const gate='<div class="panel"><h3>Next step</h3><p>After this concept you take the <b>Concepts test</b>. You need <b>100%</b> to unlock the practice lab.</p></div>';
+const linked=v=>{const m=v.match(/<label\s[^>]*for=["']([^"']+)["']/i);return !!m&&new RegExp('<input\\s[^>]*id=["\']'+m[1]+'["\']','i').test(v)};
+const pages=[
+intro("Tables present data in rows and columns: timetables, prices, results. In this lesson you will build clear, accessible tables.",["Build a table with rows and cells","Mark header cells with th","Group content with thead and tbody","Merge cells with colspan"],"Tables are the right tool for real data. Understanding them also helps you read the data-heavy pages you will meet later, from dashboards to security logs.","Lessons 1 to 3"),
+{phase:0,type:"quiz",title:"Introduction check",label:"Introduction",intro:"Every answer must be correct to continue.",pts:5,qs:[
+ {q:"What will you build in this lesson?",o:["Tables","Forms","Animations"],a:0,e:"This lesson is about tables."},
+ {q:"What score is needed to pass each test?",o:["100%","70%","60%"],a:0,e:"Every test requires 100%."},
+ {q:"What kind of content belongs in a table?",o:["Data in rows and columns","The whole page layout","Only images"],a:0,e:"Tables are for data."}]},
+{phase:1,type:"read",title:"Table basics",label:"Concept 1 of 3",html:`
+<p>A table is built from rows, and each row holds cells:</p>
+${C(`<table>\n  <tr>\n    <th>Name</th>\n    <th>Score</th>\n  </tr>\n  <tr>\n    <td>Amina</td>\n    <td>90</td>\n  </tr>\n</table>`)}
+<div class="tw"><table><tr><th>Element</th><th>Role</th></tr><tr><td>${I("<table>")}</td><td>The whole table</td></tr><tr><td>${I("<tr>")}</td><td>One table row</td></tr><tr><td>${I("<th>")}</td><td>A header cell (bold and centred by default)</td></tr><tr><td>${I("<td>")}</td><td>A normal data cell</td></tr></table></div>
+<div class="key"><b>Key idea</b>Cells go inside rows, and rows go inside the table. Every row should have the same number of cells.</div>
+<div class="warn"><b>Common mistake</b>Putting ${I("<td>")} directly inside ${I("<table>")} without a ${I("<tr>")}.</div>`},
+{phase:1,type:"read",title:"Table structure",label:"Concept 2 of 3",html:`
+<p>Larger tables use sections so browsers and screen readers understand them:</p>
+${C(`<table>\n  <caption>Class results</caption>\n  <thead>\n    <tr><th>Name</th><th>Score</th></tr>\n  </thead>\n  <tbody>\n    <tr><td>Amina</td><td>90</td></tr>\n  </tbody>\n</table>`)}
+<div class="tw"><table><tr><th>Element</th><th>Role</th></tr><tr><td>${I("<caption>")}</td><td>The title of the table</td></tr><tr><td>${I("<thead>")}</td><td>The header rows</td></tr><tr><td>${I("<tbody>")}</td><td>The main data rows</td></tr></table></div>
+<div class="key"><b>Key idea</b>A caption tells everyone what the table is about, and header sections give the data meaning. This is good accessibility practice.</div>`},
+{phase:1,type:"read",title:"Spanning cells",label:"Concept 3 of 3",html:`
+<p>A cell can stretch across several columns or rows:</p>
+${C(`<tr>\n  <th colspan="2">Results</th>\n</tr>`)}
+<div class="tw"><table><tr><th>Attribute</th><th>Effect</th></tr><tr><td>${I('colspan="2"')}</td><td>Cell spans 2 columns</td></tr><tr><td>${I('rowspan="2"')}</td><td>Cell spans 2 rows</td></tr></table></div>
+<div class="key"><b>Key idea</b>Tables are for <b>data</b>, never for page layout. Layout is a job for CSS.</div>
+<div class="warn"><b>Common mistake</b>Spanning a cell but leaving the extra cells in the row, which pushes the table out of shape.</div>${gate}`},
+{phase:2,type:"final",title:"Concepts test",label:"Concepts test",pass:1,pts:5,intro:"This test covers all three concepts.",okMsg:()=>"You scored 100%. The practice lab is now unlocked.",qs:[
+ {q:"Which element is one table row?",o:["<td>","<tr>","<th>"],a:1,ref:"Concept 1: Table basics",e:"tr is a table row."},
+ {q:"Which element is a header cell?",o:["<th>","<thead>","<tr>"],a:0,ref:"Concept 1: Table basics",e:"th marks a header cell."},
+ {q:"Where do td cells belong?",o:["Inside a tr","Directly inside table","Inside head"],a:0,ref:"Concept 1: Table basics",e:"Cells go inside rows."},
+ {q:"Which element gives the table a title?",o:["<caption>","<thead>","<title>"],a:0,ref:"Concept 2: Table structure",e:"caption titles a table."},
+ {q:"Which attribute makes a cell cover two columns?",o:["rowspan=\"2\"","colspan=\"2\"","span=\"2\""],a:1,ref:"Concept 3: Spanning cells",e:"colspan spans columns."},
+ {q:"What should tables be used for?",o:["Page layout","Data","Images"],a:1,ref:"Concept 3: Spanning cells",e:"Tables are for data."}]},
+{phase:3,type:"lab",title:"Exercise 1: Build a table",label:"Practice lab 1 of 2",pts:20,task:"Build a table with a header row of 3 th cells and at least 2 data rows of 3 td cells.",start:"",
+ reqs:[["A table element",v=>/<table>[\s\S]*<\/table>/i.test(v)],["At least 3 th header cells",v=>n(v,/<th>[^<]+<\/th>/gi)>=3],["At least 3 rows (tr)",v=>n(v,/<tr>/gi)>=3],["At least 6 td data cells",v=>n(v,/<td>[^<]+<\/td>/gi)>=6]],
+ hint:"One <tr> with three <th>, then two <tr> each with three <td>.",sol:"<table>\n  <tr><th>Name</th><th>Age</th><th>City</th></tr>\n  <tr><td>Amina</td><td>20</td><td>Kigali</td></tr>\n  <tr><td>John</td><td>22</td><td>Huye</td></tr>\n</table>"},
+{phase:3,type:"lab",title:"Exercise 2: Structure and span",label:"Practice lab 2 of 2",pts:20,task:"Create a table with a caption, thead, tbody, and one cell that uses colspan.",start:"",
+ reqs:[["Has a caption with text",v=>/<caption>[^<]+<\/caption>/i.test(v)],["Has thead and tbody",v=>/<thead>[\s\S]*<\/thead>/i.test(v)&&/<tbody>[\s\S]*<\/tbody>/i.test(v)],["Uses colspan on a cell",v=>/<t[hd]\s[^>]*colspan=["']?\d/i.test(v)]],
+ hint:'Put <caption> first, then <thead>, then <tbody>. Try <th colspan="2">Results</th>.',sol:'<table>\n  <caption>Class results</caption>\n  <thead>\n    <tr><th colspan="2">Results</th></tr>\n  </thead>\n  <tbody>\n    <tr><td>Amina</td><td>90</td></tr>\n  </tbody>\n</table>'},
+{phase:4,type:"final",title:"Final test",label:"Final test",pass:1,pts:5,intro:"This is the last step of the lesson.",okMsg:()=>"You scored 100%. Total points: "+points+" / "+MAX+". Next: Lesson 5, Forms (coming soon).",qs:[
+ {q:"Which order is correct?",o:["table > tr > td","table > td > tr","tr > table > td"],a:0,ref:"Concept 1",e:"Cells in rows in a table."},
+ {q:"Which element marks a header cell?",o:["<th>","<td>","<tb>"],a:0,ref:"Concept 1",e:"th is a header cell."},
+ {q:"Which element holds the main data rows?",o:["<thead>","<tbody>","<caption>"],a:1,ref:"Concept 2",e:"tbody holds the main rows."},
+ {q:"Why add a caption?",o:["It describes the table to everyone","It colours the table","It adds a border"],a:0,ref:"Concept 2",e:"A caption describes the table."},
+ {q:"colspan=\"3\" makes a cell:",o:["Span three columns","Span three rows","Repeat three times"],a:0,ref:"Concept 3",e:"colspan spans columns."},
+ {q:"Should tables be used for page layout?",o:["Yes","No, only for data","Only on phones"],a:1,ref:"Concept 3",e:"Use CSS for layout."}]}
+];
+/* ============ END OF LESSON CONTENT ============ */
+
+/* ---------- engine ---------- */
+const N=pages.length,done=Array(N).fill(false);let cur=0,points=0;
+const MAX=pages.reduce((s,p)=>s+(p.type==="lab"?p.pts:(p.qs?p.qs.length*p.pts:0)),0);
+const main=$("main");
+function add(n){if(!n)return;points+=n;$("pts").textContent=points+" pts";const t=$("toast");t.textContent="+"+n+" points";t.classList.add("on");setTimeout(()=>t.classList.remove("on"),1000)}
+function complete(i){done[i]=true;refresh();if(i===N-1)save()}
+function mk(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
+
+pages.forEach((pg,i)=>{
+  const sec=mk("section","page");sec.dataset.i=i;
+  sec.appendChild(mk("p","eyebrow",pg.label));
+  sec.appendChild(mk("h1",null,pg.title));
+  if(pg.type==="read"){const d=mk("div");d.innerHTML=pg.html;sec.appendChild(d);done[i]=true}
+  if(pg.type==="quiz")buildQuiz(sec,pg,i);
+  if(pg.type==="lab")buildLab(sec,pg,i);
+  if(pg.type==="final")buildFinal(sec,pg,i);
+  main.appendChild(sec);
+});
+
+function buildQuiz(sec,pg,i){
+  sec.appendChild(mk("p","m",pg.intro));let ok=0;
+  pg.qs.forEach((it,k)=>{
+    const box=mk("div","q");box.appendChild(mk("p","qt",(k+1)+". "+it.q));
+    const og=mk("div","opts"),fb=mk("div","fb");let missed=false,solved=false;
+    it.o.forEach((t,j)=>{
+      const b=mk("button","opt",t);b.type="button";
+      b.onclick=()=>{
+        if(solved)return;
+        if(j===it.a){solved=true;b.classList.add("good");fb.className="fb ok";fb.textContent="Correct. "+it.e;og.querySelectorAll(".opt").forEach(x=>x.disabled=true);add(missed?pg.pts/2:pg.pts);ok++;if(ok===pg.qs.length)complete(i)}
+        else{missed=true;b.classList.add("bad");b.disabled=true;fb.className="fb no";fb.textContent="Not quite. Try another answer."}
+      };og.appendChild(b);
+    });
+    box.appendChild(og);box.appendChild(fb);sec.appendChild(box);
+  });
+}
+
+function buildLab(sec,pg,i){
+  sec.classList.add("lab");
+  sec.appendChild(mk("p",null,pg.task));
+  sec.appendChild(mk("p","m","Requirements:"));
+  const ul=mk("ul","req");pg.reqs.forEach(r=>ul.appendChild(mk("li",null,r[0])));sec.appendChild(ul);
+  const ed=mk("div","ed"),l1=mk("div","l","Your code"),ta=mk("textarea"),l2=mk("div","l","Result"),fr=mk("iframe");
+  ta.value=pg.start;ta.spellcheck=false;ta.setAttribute("autocapitalize","off");ta.setAttribute("autocorrect","off");ta.setAttribute("aria-label","Your code");
+  fr.title="Result";fr.setAttribute("sandbox","");fr.srcdoc=pg.start;
+  [l1,ta,l2,fr].forEach(x=>ed.appendChild(x));sec.appendChild(ed);
+  const tools=mk("div","tools"),hb=mk("button","sm","Show hint"),sb2=mk("button","sm","Show solution"),rb=mk("button","sm","Reset");
+  [hb,sb2,rb].forEach(b=>{b.type="button";tools.appendChild(b)});sec.appendChild(tools);
+  const hint=mk("div","hint",pg.hint);sec.appendChild(hint);
+  let usedSol=false;
+  const check=()=>{
+    fr.srcdoc=ta.value;let all=true;
+    [...ul.children].forEach((li,k)=>{const p=pg.reqs[k][1](ta.value);li.classList.toggle("ok",p);if(!p)all=false});
+    if(all&&!done[i]){add(usedSol?pg.pts/2:pg.pts);complete(i)}
+  };
+  ta.addEventListener("input",check);
+  hb.onclick=()=>{hint.style.display=hint.style.display==="block"?"none":"block"};
+  sb2.onclick=()=>{if(!done[i]&&!confirm("Show the solution? You will earn half the points for this exercise."))return;if(!done[i])usedSol=true;ta.value=pg.sol;check()};
+  rb.onclick=()=>{ta.value=pg.start;check()};
+  fr.srcdoc=pg.start;
+}
+
+function shuffle(a){for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a}
+function buildFinal(sec,pg,i){
+  const need=Math.round(pg.pass*100);
+  sec.appendChild(mk("p","m",pg.intro+" Answer all "+pg.qs.length+" questions, then submit. You need "+need+"% to continue. You can retake the test, and the order of questions and answers changes each time."));
+  const ans={},wrap=mk("div"),res=mk("div"),sub=mk("button","btn","Submit test");sub.type="button";let best=0;
+  const render=()=>{
+    wrap.innerHTML="";res.innerHTML="";sub.style.display="";sub.disabled=true;
+    Object.keys(ans).forEach(k=>delete ans[k]);
+    shuffle(pg.qs.map((q,k)=>k)).forEach((qi,n)=>{
+      const it=pg.qs[qi],box=mk("div","q");box.appendChild(mk("p","qt",(n+1)+". "+it.q));const og=mk("div","opts");
+      shuffle(it.o.map((t,j)=>j)).forEach(j=>{
+        const b=mk("button","opt",it.o[j]);b.type="button";
+        b.onclick=()=>{ans[qi]=j;og.querySelectorAll(".opt").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");sub.disabled=Object.keys(ans).length<pg.qs.length};
+        og.appendChild(b);
+      });
+      box.appendChild(og);wrap.appendChild(box);
+    });
+  };
+  sub.onclick=()=>{
+    const right=pg.qs.filter((it,k)=>ans[k]===it.a).length,pct=right/pg.qs.length,passed=pct>=pg.pass;
+    if(right>best){add((right-best)*pg.pts);best=right}
+    sub.style.display="none";wrap.innerHTML="";res.innerHTML="";
+    const box=mk("div","res "+(passed?"pass":"fail"));
+    box.appendChild(mk("div","big",right+" / "+pg.qs.length+"  ("+Math.round(pct*100)+"%)"));
+    box.appendChild(mk("div","st",passed?"Passed":"Not passed. "+need+"% is required."));
+    box.appendChild(mk("p","m",passed?pg.okMsg():"Every question must be correct to continue. Review the topics listed below, then retake the test."));
+    pg.qs.forEach((it,k)=>{
+      const ok=ans[k]===it.a,d=mk("div","rv");
+      d.textContent=passed?(k+1)+". Correct. "+it.e:(ok?"Correct: "+it.q:"Incorrect: "+it.q+"  Review: "+it.ref+".");
+      d.style.color=ok?"var(--ok)":"var(--err)";box.appendChild(d);
+    });
+    if(!passed){const rt=mk("button","btn","Retake test");rt.type="button";rt.style.marginTop="12px";rt.onclick=()=>{render()};box.appendChild(rt)}
+    res.appendChild(box);if(passed)complete(i);
+  };
+  sec.appendChild(wrap);sec.appendChild(sub);sec.appendChild(res);render();
+}
+
+/* ---------- navigation ---------- */
+const stepsEl=$("steps");
+PH.forEach(n=>{const d=mk("div","ph");d.innerHTML='<i><b></b></i>';d.appendChild(document.createTextNode(n));stepsEl.appendChild(d)});
+function refresh(){
+  document.querySelectorAll(".page").forEach((s,k)=>s.classList.toggle("on",k===cur));
+  [...stepsEl.children].forEach((el,p)=>{
+    const idx=pages.map((x,k)=>x.phase===p?k:-1).filter(k=>k>=0);
+    const d=idx.filter(k=>done[k]&&(pages[k].type!=="read"||k<cur||(k===cur))).length;
+    el.querySelector("b").style.width=Math.round(d/idx.length*100)+"%";el.classList.toggle("on",pages[cur].phase===p);
+  });
+  const last=cur===N-1;
+  $("back").style.visibility=cur===0?"hidden":"visible";
+  $("cnt").textContent=(cur+1)+" / "+N;
+  $("next").textContent=last?"Finish lesson":"Continue";
+  $("next").disabled=!done[cur];
+}
+$("next").onclick=()=>{if(cur===N-1){location.href="dashboard.html"}else{cur++;refresh();window.scrollTo(0,0)}};
+$("back").onclick=()=>{if(cur>0){cur--;refresh();window.scrollTo(0,0)}};
+refresh();
+</script>
+</body>
+</html>

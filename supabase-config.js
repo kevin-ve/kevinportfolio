@@ -2,8 +2,8 @@
 // The anon key is safe to be public because Row Level Security protects your data.
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
-const SUPABASE_URL = "PASTE_PROJECT_URL";
-const SUPABASE_ANON_KEY = "PASTE_ANON_PUBLIC_KEY";
+const SUPABASE_URL = "https://ixyfarfroganibhgufha.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_QnYxxgsKPLZYj3fXoEPdjg_wx_kOT3U";
 
 export const configured = SUPABASE_URL.startsWith("https://");
 export const sb = configured ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;

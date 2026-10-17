@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML Lesson 1: What is HTML? | NET Academy</title>
+<style>
+:root{--bg:#f6f8fc;--surface:#fff;--ink:#0e1a33;--muted:#54627e;--line:#dde3ef;--accent:#2540e8;--accent-d:#1b30b8;--accent-ink:#fff;--soft:#e8ecff;--code:#0e1a33;--code-ink:#e9eeff;--ok:#157347;--err:#c0262d;--sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--serif:Georgia,"Times New Roman",serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+@media (prefers-color-scheme:dark){:root{--bg:#0b1324;--surface:#131f3a;--ink:#eef2fb;--muted:#9dabc9;--line:#25335a;--accent:#8196ff;--accent-d:#9fb0ff;--accent-ink:#0b1324;--soft:#1b2a52;--code:#070d1b;--ok:#6fd39b;--err:#ff8a8f}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.7 var(--sans)}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid #ffc83d;outline-offset:2px}
+header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.bar{max-width:760px;margin:0 auto;padding:0 18px;height:60px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font:700 1.15rem var(--serif);text-decoration:none;color:var(--ink);display:flex;align-items:center;gap:8px}
+.logo{width:28px;height:28px;border-radius:7px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:700 .78rem var(--sans)}
+.links{display:flex;gap:6px}
+.links a,.links button{min-height:40px;padding:0 12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;font:600 .88rem var(--sans);text-decoration:none;display:inline-flex;align-items:center;cursor:pointer}
+main{max-width:760px;margin:0 auto;padding:28px 18px 80px;visibility:hidden}
+.crumb{color:var(--muted);font-size:.9rem;margin:0 0 6px}
+h1{font:700 clamp(1.9rem,6vw,2.6rem)/1.15 var(--serif);margin:0 0 12px;letter-spacing:-.01em}
+h2{font:700 1.5rem/1.25 var(--serif);margin:44px 0 10px}
+h3{margin:24px 0 6px;font-size:1.08rem}
+p{margin:0 0 14px}
+.goals{background:var(--soft);border-radius:12px;padding:16px 20px;margin:18px 0 0}
+.goals b{display:block;margin-bottom:6px}
+.goals ul{margin:0;padding-left:20px}
+code{font:.9em var(--mono);background:var(--soft);padding:2px 6px;border-radius:5px}
+pre{background:var(--code);color:var(--code-ink);border-radius:10px;padding:16px;overflow-x:auto;margin:10px 0 6px;font:.9rem/1.6 var(--mono)}
+pre code{background:none;padding:0;color:inherit;font-size:inherit}
+.cap{font-size:.88rem;color:var(--muted);margin:0 0 16px}
+.tip{border-left:4px solid var(--accent);background:var(--surface);border-radius:0 10px 10px 0;padding:12px 16px;margin:16px 0;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;margin:10px 0 16px;font-size:.95rem}
+th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:var(--soft)}
+.scroll{overflow-x:auto}
+.lab{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:14px 0}
+.lab-h{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line);font-weight:600;font-size:.92rem}
+.lab-h button{min-height:36px;padding:0 12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;font:600 .85rem var(--sans);cursor:pointer}
+.lab textarea{display:block;width:100%;height:190px;border:0;resize:vertical;padding:14px;background:var(--code);color:var(--code-ink);font:16px/1.5 var(--mono)}
+.lab-l{padding:7px 14px;font-size:.78rem;color:var(--muted);background:var(--bg);border-block:1px solid var(--line)}
+.lab iframe{display:block;width:100%;height:190px;border:0;background:#fff}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:14px 0}
+.q p{font-weight:600;margin:0 0 8px}
+.q label{display:flex;gap:10px;align-items:flex-start;padding:9px 6px;cursor:pointer;border-radius:8px}
+.q label:hover{background:var(--soft)}
+.q input{margin-top:6px;width:18px;height:18px;accent-color:var(--accent)}
+.q.right{border-color:var(--ok)}.q.wrong{border-color:var(--err)}
+.fb{margin:8px 0 0;font-size:.92rem;font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 26px;border:0;border-radius:10px;background:var(--accent);color:var(--accent-ink);font:650 1rem var(--sans);cursor:pointer;text-decoration:none}
+.btn:hover{background:var(--accent-d)}
+.score{margin:14px 0 0;font-weight:700}
+.next{margin-top:40px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted)}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <a class="brand" href="dashboard.html"><span class="logo">N</span>NET Academy</a>
+  <div class="links"><a href="dashboard.html">Dashboard</a><button id="out" type="button">Log out</button></div>
+</div></header>
+
+<main id="page">
+  <p class="crumb">HTML and CSS &middot; Lesson 1 of 10 &middot; about 15 minutes</p>
+  <h1>What is HTML?</h1>
+  <p>Every website you have ever visited, from Google to your favourite news site, is built on HTML. In this lesson you will understand what it is and write your own first web page.</p>
+  <div class="goals"><b>By the end you will be able to:</b>
+    <ul><li>Explain what HTML is in your own words</li><li>Read and write an HTML tag</li><li>Build the basic skeleton of a web page</li><li>Use headings and paragraphs</li></ul>
+  </div>
+
+  <h2>1. What HTML means</h2>
+  <p><b>HTML</b> stands for <b>H</b>yper<b>T</b>ext <b>M</b>arkup <b>L</b>anguage. That sounds complicated, but the idea is simple:</p>
+  <p>HTML is a way of <b>labelling the parts of a page</b> so the browser (Chrome, Firefox, Safari) knows what each part is: "this is a title", "this is a paragraph", "this is a picture".</p>
+  <div class="tip"><b>Think of a Word document.</b> When you make some text a "Heading" or a "Bullet list", you are labelling it. HTML does the same thing, but you write the labels yourself using short words inside angle brackets.</div>
+  <p>HTML is <b>not</b> a programming language. It does not calculate or make decisions. It describes <i>what is on the page</i>. Later, CSS makes it pretty and JavaScript makes it interactive.</p>
+
+  <h2>2. Your first tag</h2>
+  <p>Labels in HTML are called <b>tags</b>. Most tags come in a pair: one to start and one to stop.</p>
+<pre><code>&lt;p&gt;Hello, world!&lt;/p&gt;</code></pre>
+  <p class="cap">This is a paragraph. The browser shows: Hello, world!</p>
+  <div class="scroll"><table>
+    <tr><th>Part</th><th>What it is</th></tr>
+    <tr><td><code>&lt;p&gt;</code></td><td>The <b>opening tag</b>. It says "a paragraph starts here".</td></tr>
+    <tr><td>Hello, world!</td><td>The <b>content</b>. This is what people see.</td></tr>
+    <tr><td><code>&lt;/p&gt;</code></td><td>The <b>closing tag</b>. Same name, but with a <code>/</code>. It says "the paragraph ends here".</td></tr>
+  </table></div>
+  <p>Together, the opening tag, the content and the closing tag are called an <b>element</b>.</p>
+  <div class="tip"><b>Common mistake:</b> forgetting the <code>/</code> in the closing tag, or forgetting to close the tag at all. If your page looks strange, check your closing tags first.</div>
+
+  <h2>3. Headings and paragraphs</h2>
+  <p>Headings go from <code>&lt;h1&gt;</code> (the biggest, most important) down to <code>&lt;h6&gt;</code> (the smallest). Use one <code>&lt;h1&gt;</code> per page for the main title.</p>
+<pre><code>&lt;h1&gt;My Favourite Foods&lt;/h1&gt;
+&lt;h2&gt;Fruits&lt;/h2&gt;
+&lt;p&gt;I love mangoes and pineapples.&lt;/p&gt;
+&lt;h2&gt;Drinks&lt;/h2&gt;
+&lt;p&gt;I enjoy fresh juice on hot days.&lt;/p&gt;</code></pre>
+  <p class="cap">One main title, two smaller headings, and a paragraph under each.</p>
+  <p>Two small facts to remember: the browser puts each paragraph on its own line, and <b>extra spaces and blank lines in your code are ignored</b>. Only the tags decide how things look.</p>
+
+  <h2>4. The skeleton of a web page</h2>
+  <p>Every complete web page has the same basic structure. Memorise this one, you will use it hundreds of times.</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;My First Page&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Hello!&lt;/h1&gt;
+    &lt;p&gt;Welcome to my page.&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+  <div class="scroll"><table>
+    <tr><th>Line</th><th>Meaning</th></tr>
+    <tr><td><code>&lt;!DOCTYPE html&gt;</code></td><td>Tells the browser "this page uses modern HTML".</td></tr>
+    <tr><td><code>&lt;html&gt;</code></td><td>Wraps the whole page. <code>lang="en"</code> says the page is in English.</td></tr>
+    <tr><td><code>&lt;head&gt;</code></td><td>Behind-the-scenes information. Visitors do not see this part.</td></tr>
+    <tr><td><code>&lt;title&gt;</code></td><td>The name shown on the browser tab.</td></tr>
+    <tr><td><code>&lt;body&gt;</code></td><td>Everything visitors <b>can see</b>: text, images, buttons.</td></tr>
+  </table></div>
+  <p>Notice the tags sit <b>inside</b> each other, like boxes inside boxes. The indentation (spaces at the start of lines) is not required, but it makes your code much easier to read.</p>
+
+  <h2>5. Try it yourself</h2>
+  <p>Edit the code in the box and watch the result change instantly. Nothing you do here can break anything, so experiment!</p>
+  <div class="lab">
+    <div class="lab-h"><span>Your code</span><button type="button" id="reset">Reset</button></div>
+    <label for="code" class="lab-l" style="display:block">HTML</label>
+    <textarea id="code" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea>
+    <div class="lab-l">Result</div>
+    <iframe id="view" title="Result" sandbox=""></iframe>
+  </div>
+  <h3>Practice challenges</h3>
+  <ol>
+    <li>Change the heading to <b>your own name</b>.</li>
+    <li>Add a second paragraph about your favourite hobby.</li>
+    <li>Add an <code>&lt;h2&gt;</code> heading called "My Goals" and a paragraph under it.</li>
+    <li>Remove a closing tag on purpose and see what happens. Then fix it.</li>
+  </ol>
+
+  <h2>6. Quick quiz</h2>
+  <div id="quiz"></div>
+  <button class="btn" id="check" type="button">Check my answers</button>
+  <p class="score" id="score" role="status"></p>
+
+  <h2>Summary</h2>
+  <ul>
+    <li>HTML labels the parts of a web page using <b>tags</b>.</li>
+    <li>Most tags come in pairs: <code>&lt;p&gt;</code> opens and <code>&lt;/p&gt;</code> closes.</li>
+    <li><code>&lt;h1&gt;</code> to <code>&lt;h6&gt;</code> are headings, <code>&lt;p&gt;</code> is a paragraph.</li>
+    <li>Every page has <code>html</code>, <code>head</code> and <code>body</code>. Visitors see only what is in the <code>body</code>.</li>
+  </ul>
+  <div class="next"><span>Next: Lesson 2, Text, links and lists (coming soon)</span><a href="dashboard.html">Back to dashboard</a></div>
+</main>
+
+<script type="module">
+import { sb, configured } from "./supabase-config.js";
+const $=id=>document.getElementById(id);
+
+/* Only logged-in users can open this page */
+(async()=>{
+  if(!configured){location.replace("login.html");return}
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session){location.replace("login.html");return}
+  $("page").style.visibility="visible";
+})();
+$("out").onclick=async()=>{await sb.auth.signOut();location.href="index.html"};
+
+/* Live editor */
+const start='<!DOCTYPE html>\n<html lang="en">\n  <head>\n    <title>My First Page</title>\n  </head>\n  <body>\n    <h1>Hello!</h1>\n    <p>Welcome to my page.</p>\n  </body>\n</html>';
+const code=$("code"),view=$("view");
+const run=()=>{view.srcdoc=code.value};
+code.value=start;run();
+code.addEventListener("input",run);
+$("reset").onclick=()=>{code.value=start;run()};
+
+/* Quiz */
+const Q=[
+ {q:"What does HTML stand for?",o:["HyperText Markup Language","High Tech Modern Language","Home Tool Making Language"],a:0,why:"HyperText Markup Language."},
+ {q:"Which is the correct closing tag for a paragraph?",o:["<p/>","</p>","<end p>"],a:1,why:"A closing tag has the same name with a / in front: </p>."},
+ {q:"Where do the things visitors can see go?",o:["Inside <head>","Inside <title>","Inside <body>"],a:2,why:"Everything visible goes inside <body>."}
+];
+const quiz=$("quiz");
+Q.forEach((it,i)=>{
+  const d=document.createElement("div");d.className="q";d.id="q"+i;
+  const p=document.createElement("p");p.textContent=(i+1)+". "+it.q;d.appendChild(p);
+  it.o.forEach((t,j)=>{
+    const l=document.createElement("label"),r=document.createElement("input");
+    r.type="radio";r.name="q"+i;r.value=j;l.appendChild(r);
+    const s=document.createElement("span");s.textContent=t;l.appendChild(s);d.appendChild(l);
+  });
+  const f=document.createElement("div");f.className="fb";d.appendChild(f);
+  quiz.appendChild(d);
+});
+$("check").onclick=()=>{
+  let n=0;
+  Q.forEach((it,i)=>{
+    const box=$("q"+i),pick=document.querySelector('input[name="q'+i+'"]:checked'),fb=box.querySelector(".fb");
+    box.classList.remove("right","wrong");
+    if(!pick){fb.textContent="Pick an answer.";return}
+    if(+pick.value===it.a){n++;box.classList.add("right");fb.style.color="var(--ok)";fb.textContent="Correct! "+it.why}
+    else{box.classList.add("wrong");fb.style.color="var(--err)";fb.textContent="Not quite. "+it.why}
+  });
+  $("score").textContent="Score: "+n+" out of "+Q.length+(n===Q.length?" 🎉 Well done!":". Review the lesson and try again.");
+};
+</script>
+</body>
+</html>

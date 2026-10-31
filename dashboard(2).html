@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard | NET Academy</title>
+<link rel="stylesheet" href="auth.css">
+</head>
+<body>
+<a class="brand" href="index.html"><span class="logo">N</span>NET Academy</a>
+<main class="card" id="card" style="visibility:hidden">
+  <h1 id="hi">Welcome</h1>
+  <p class="sub" id="em"></p>
+  <p><b>Your progress</b><br><span class="sub" id="tot" style="margin:0"></span></p>
+  <div id="lessons"></div>
+  <div id="extra"></div>
+  <button class="btn" id="out">Log out</button>
+</main>
+<script type="module">
+import { sb, configured } from "./supabase-config.js";
+import { COURSES } from "./pricing.js";
+import { getOwnedCourses, decide } from "./access.js";
+
+const $ = id => document.getElementById(id);
+const TITLES = {
+  html: ["What is HTML?", "Text formatting and lists", "Links and images", "Tables", "Forms and inputs", "Semantic page layout", "Attributes, div and span", "Project: your personal page"],
+  css: ["CSS basics and selectors", "Colors, backgrounds and text", "The box model and display", "Positioning", "Flexbox", "Grid", "Responsive design", "Pseudo-classes, variables and motion", "Project: style your page"],
+  js: ["Meet JavaScript", "Variables and data types", "Operators and decisions", "Loops and arrays", "Functions", "Objects and array methods", "The DOM", "Events and forms", "Async JavaScript and fetch", "Project: build a to-do app"]
+};
+
+function button(label, status, href, bg) {
+  const el = document.createElement(href ? "a" : "button");
+  el.className = "btn";
+  el.style.cssText = "display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;text-decoration:none;margin-top:8px";
+  if (href) el.href = href; else el.disabled = true;
+  if (bg) el.style.background = bg;
+  const left = document.createElement("span");
+  left.textContent = label;
+  const right = document.createElement("span");
+  right.style.cssText = "font-size:.8rem;white-space:nowrap";
+  right.textContent = status;
+  el.append(left, right);
+  return el;
+}
+
+async function start() {
+  if (!configured) return location.replace("login.html");
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return location.replace("login.html");
+  const user = session.user;
+
+  let name = (user.user_metadata && user.user_metadata.full_name) || "";
+  const prof = await sb.from("profiles").select("full_name").eq("id", user.id).maybeSingle();
+  if (prof.data && prof.data.full_name) name = prof.data.full_name;
+  $("hi").textContent = "Welcome, " + (name.split(" ")[0] || "learner") + "!";
+  $("em").textContent = user.email;
+
+  const [prog, pend, adm] = await Promise.all([
+    sb.from("lesson_progress").select("lesson,points").eq("user_id", user.id),
+    sb.from("payments").select("course").eq("user_id", user.id).eq("status", "pending"),
+    sb.from("admins").select("user_id").eq("user_id", user.id)
+  ]);
+  let owned = new Set(), warn = "";
+  try { owned = await getOwnedCourses(sb, user.id); } catch (e) { warn = ". Could not check your purchases."; }
+  const done = new Map((prog.data || []).map(r => [r.lesson, r.points]));
+  const waiting = new Set((pend.data || []).map(r => r.course));
+
+  let total = 0, points = 0;
+  for (const key in COURSES) {
+    const course = COURSES[key];
+    const head = document.createElement("div");
+    head.style.cssText = "display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:22px";
+    const title = document.createElement("b");
+    title.textContent = course.title;
+    head.appendChild(title);
+    if (owned.has(key)) {
+      const tag = document.createElement("span");
+      tag.className = "sub"; tag.style.margin = "0"; tag.textContent = "Unlocked";
+      head.appendChild(tag);
+    } else if (waiting.has(key)) {
+      const tag = document.createElement("span");
+      tag.className = "sub"; tag.style.margin = "0"; tag.textContent = "Payment being checked";
+      head.appendChild(tag);
+    } else {
+      const buy = document.createElement("a");
+      buy.href = "pay.html?course=" + key;
+      buy.textContent = "Unlock " + course.price.toLocaleString("en-US") + " RWF";
+      buy.style.cssText = "font-weight:700;font-size:.9rem";
+      head.appendChild(buy);
+    }
+    $("lessons").appendChild(head);
+
+    TITLES[key].forEach((lessonTitle, i) => {
+      const n = course.first + i;
+      const file = "lesson-" + key + "-" + (i + 1) + ".html";
+      total++;
+      let status, href = null, bg = null;
+      if (!decide(n, owned).allowed) {
+        status = "Unlock"; href = "pay.html?course=" + key;
+      } else if (done.has(n)) {
+        status = "Completed"; href = file; bg = "var(--ok)"; points += done.get(n);
+      } else if (i === 0 || done.has(n - 1)) {
+        status = "Start"; href = file;
+      } else {
+        status = "Locked";
+      }
+      $("lessons").appendChild(button((i + 1) + ". " + lessonTitle, status, href, bg));
+    });
+  }
+
+  $("tot").textContent = done.size + " of " + total + " lessons complete, " + points + " points" + warn;
+  if (prog.error) { $("tot").textContent = "Could not load progress: " + prog.error.message; $("tot").style.color = "var(--err)"; }
+
+  [["Python course", "Coming soon"], ["Cybersecurity course", "Coming soon"]].forEach(([group, label]) => {
+    const h = document.createElement("p");
+    h.style.cssText = "margin:22px 0 0;font-weight:700";
+    h.textContent = group;
+    $("lessons").appendChild(h);
+    $("lessons").appendChild(button(label, "", null, null));
+  });
+
+  if (adm.data && adm.data.length) {
+    const link = document.createElement("a");
+    link.href = "admin.html"; link.textContent = "Open payments admin";
+    link.style.cssText = "display:block;margin-top:18px;font-weight:700";
+    $("extra").appendChild(link);
+  }
+  $("card").style.visibility = "visible";
+}
+
+$("out").onclick = async () => { await sb.auth.signOut(); location.href = "index.html"; };
+start();
+</script>
+</body>
+</html>

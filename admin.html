@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Payments admin | NET Academy</title>
+<link rel="stylesheet" href="auth.css">
+<style>
+.card{max-width:640px}
+.tabs{display:flex;gap:8px;margin:14px 0}
+.tab{flex:1;min-height:44px;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;font:650 .92rem var(--sans);cursor:pointer}
+.tab.on{border-color:var(--accent);background:var(--soft);color:var(--accent)}
+.pcard{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:10px 0;font-size:.95rem}
+.pcard .when{color:var(--muted);font-size:.85rem;margin-top:2px}
+.acts{display:flex;gap:8px;margin-top:12px}
+.acts button{flex:1;min-height:46px;border:0;border-radius:10px;font:700 .95rem var(--sans);cursor:pointer}
+.ok-b{background:var(--ok);color:#fff}.no-b{background:var(--err);color:#fff}
+</style>
+</head>
+<body>
+<a class="brand" href="dashboard.html"><span class="logo">N</span>NET Academy</a>
+<main class="card" id="card" style="visibility:hidden">
+  <h1>Payments</h1>
+  <p class="sub">Check the MoMo SMS on your phone, then approve or reject.</p>
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-s="pending">Pending</button>
+    <button class="tab" data-s="approved">Approved</button>
+    <button class="tab" data-s="rejected">Rejected</button>
+  </div>
+  <div class="msg" id="msg" role="status"></div>
+  <div id="list"></div>
+</main>
+<script type="module">
+import { sb, configured } from "./supabase-config.js";
+import { COURSES } from "./pricing.js";
+
+const $ = id => document.getElementById(id);
+const el = (tag, cls, text) => {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+};
+const say = (text, kind) => { $("msg").textContent = text; $("msg").className = "msg " + kind; };
+let current = "pending";
+
+async function act(p, fn) {
+  const approving = fn === "approve_payment";
+  if (!confirm((approving ? "Approve" : "Reject") + " payment " + p.txn_id + "?")) return;
+  const { error } = await sb.rpc(fn, { pid: p.id });
+  if (error) { say("Failed: " + error.message, "err"); await load(false); return; }
+  say((approving ? "Approved" : "Rejected") + " payment " + p.txn_id + ".", "ok");
+  await load(false);
+}
+
+async function load(clearMsg = true) {
+  if (clearMsg) $("msg").className = "msg";
+  $("list").textContent = "Loading...";
+  const { data, error } = await sb.from("payments")
+    .select("id,user_id,course,amount,phone,txn_id,created_at")
+    .eq("status", current).order("created_at", { ascending: false }).limit(50);
+  if (error) { $("list").textContent = "Could not load payments."; return; }
+
+  const names = {};
+  const ids = [...new Set(data.map(p => p.user_id))];
+  if (ids.length) {
+    const r = await sb.from("profiles").select("id,full_name,email").in("id", ids);
+    (r.data || []).forEach(u => { names[u.id] = u.full_name + " (" + u.email + ")"; });
+  }
+
+  $("list").textContent = "";
+  if (!data.length) { $("list").appendChild(el("p", "sub", "No " + current + " payments.")); return; }
+  data.forEach(p => {
+    const course = COURSES[p.course];
+    const card = el("div", "pcard");
+    card.appendChild(el("b", "", names[p.user_id] || "Student " + p.user_id.slice(0, 8)));
+    card.appendChild(el("div", "", (course ? course.title : p.course) + " · " + p.amount.toLocaleString("en-US") + " RWF"));
+    card.appendChild(el("div", "", "Phone " + p.phone + " · FT Id " + p.txn_id));
+    card.appendChild(el("div", "when", new Date(p.created_at).toLocaleString()));
+    if (current === "pending") {
+      const row = el("div", "acts");
+      const yes = el("button", "ok-b", "Approve");
+      const no = el("button", "no-b", "Reject");
+      yes.onclick = () => act(p, "approve_payment");
+      no.onclick = () => act(p, "reject_payment");
+      row.appendChild(yes);
+      row.appendChild(no);
+      card.appendChild(row);
+    }
+    $("list").appendChild(card);
+  });
+}
+
+async function start() {
+  if (!configured) return location.replace("login.html");
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return location.replace("login.html");
+  const a = await sb.from("admins").select("user_id").eq("user_id", session.user.id);
+  if (!a.data || !a.data.length) return location.replace("dashboard.html");
+
+  document.querySelectorAll(".tab").forEach(b => {
+    b.onclick = () => {
+      document.querySelectorAll(".tab").forEach(x => x.classList.toggle("on", x === b));
+      current = b.dataset.s;
+      load();
+    };
+  });
+  $("card").style.visibility = "visible";
+  load();
+}
+start();
+</script>
+</body>
+</html>

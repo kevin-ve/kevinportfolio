@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unlock a course | NET Academy</title>
+<link rel="stylesheet" href="auth.css">
+<style>.box{background:var(--soft);border-radius:10px;padding:12px 16px;margin:14px 0}.box ol{margin:0;padding-left:20px}.row{padding:8px 0;border-top:1px solid var(--line);font-size:.93rem}</style>
+</head>
+<body>
+<a class="brand" href="dashboard.html"><span class="logo">N</span>NET Academy</a>
+<main class="card" id="card" style="visibility:hidden">
+  <h1 id="title"></h1>
+  <p class="sub" id="price"></p>
+  <div id="owned" hidden>
+    <p>You already own this course.</p>
+    <a class="btn" href="dashboard.html" style="display:flex;align-items:center;justify-content:center;text-decoration:none">Go to my lessons</a>
+  </div>
+  <div id="pay">
+    <div class="box"><ol>
+      <li>Open MoMo and pay <b id="amount"></b> to code <b id="code"></b> (<span id="momoName"></span>).</li>
+      <li>Keep the confirmation SMS and find the <b>FT Id</b> number in it.</li>
+      <li>Enter your phone number and that FT Id below.</li>
+    </ol></div>
+    <form id="f" novalidate>
+      <label for="phone">Phone number you paid from</label>
+      <input id="phone" type="tel" inputmode="numeric" placeholder="07XXXXXXXX" autocomplete="tel">
+      <label for="txn">Transaction ID (FT Id)</label>
+      <input id="txn" inputmode="numeric" placeholder="e.g. 333701237">
+      <button class="btn" id="go" type="submit">I have paid</button>
+      <div class="msg" id="msg" role="alert"></div>
+    </form>
+  </div>
+  <div id="history"></div>
+  <p class="alt"><a href="dashboard.html">Back to dashboard</a></p>
+</main>
+<script type="module">
+import { sb, configured } from "./supabase-config.js";
+import { COURSES, MOMO } from "./pricing.js";
+
+const $ = id => document.getElementById(id);
+const say = (text, kind) => { $("msg").textContent = text; $("msg").className = "msg " + kind; };
+const key = new URLSearchParams(location.search).get("course");
+const course = COURSES[key];
+const STATUS = { pending: "Being checked", approved: "Approved", rejected: "Rejected, check the ID and submit again" };
+
+async function showHistory(uid) {
+  const { data } = await sb.from("payments").select("txn_id,status")
+    .eq("user_id", uid).eq("course", key).order("created_at", { ascending: false });
+  $("history").textContent = "";
+  (data || []).forEach(p => {
+    const row = document.createElement("div");
+    row.className = "row";
+    row.textContent = "Payment " + p.txn_id + ": " + STATUS[p.status];
+    $("history").appendChild(row);
+  });
+}
+
+async function start() {
+  if (!configured) return location.replace("login.html");
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return location.replace("login.html");
+  if (!course) return location.replace("dashboard.html");
+  const uid = session.user.id;
+  const money = course.price.toLocaleString("en-US") + " RWF";
+
+  $("title").textContent = "Unlock the " + course.title;
+  $("price").textContent = money + ", one payment, yours for good";
+  $("amount").textContent = money;
+  $("code").textContent = MOMO.code;
+  $("momoName").textContent = MOMO.name;
+  $("card").style.visibility = "visible";
+
+  const own = await sb.from("entitlements").select("course").eq("user_id", uid).eq("course", key);
+  if (own.data && own.data.length) { $("pay").hidden = true; $("owned").hidden = false; return; }
+  showHistory(uid);
+
+  $("f").addEventListener("submit", async e => {
+    e.preventDefault();
+    const phone = $("phone").value.replace(/\s+/g, "");
+    const txn = $("txn").value.replace(/\s+/g, "");
+    if (!/^07\d{8}$/.test(phone)) return say("Enter your 10-digit number, like 0781234567.", "err");
+    if (!/^\d{6,15}$/.test(txn)) return say("The transaction ID is numbers only. Copy the FT Id from the SMS.", "err");
+    $("go").disabled = true;
+    say("Sending...", "ok");
+    const { error } = await sb.from("payments")
+      .insert({ user_id: uid, course: key, amount: course.price, phone, txn_id: txn });
+    $("go").disabled = false;
+    if (error) return say(error.code === "23505" ? "This transaction ID was already used." : "Could not send. Please try again.", "err");
+    say("Thank you! We are checking your payment.", "ok");
+    $("f").reset();
+    showHistory(uid);
+  });
+}
+start();
+</script>
+</body>
+</html>

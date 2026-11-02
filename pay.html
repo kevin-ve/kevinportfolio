@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Unlock a course | NET Academy</title>
+<title>Payment | NET Academy</title>
 <link rel="stylesheet" href="auth.css">
 <style>.box{background:var(--soft);border-radius:10px;padding:12px 16px;margin:14px 0}.box ol{margin:0;padding-left:20px}.row{padding:8px 0;border-top:1px solid var(--line);font-size:.93rem}</style>
 </head>
@@ -36,12 +36,13 @@
 </main>
 <script type="module">
 import { sb, configured } from "./supabase-config.js";
-import { COURSES, MOMO } from "./pricing.js";
+import { MOMO } from "./pricing.js";
+import { productOf, formatPrice } from "./products.js";
 
 const $ = id => document.getElementById(id);
 const say = (text, kind) => { $("msg").textContent = text; $("msg").className = "msg " + kind; };
 const key = new URLSearchParams(location.search).get("course");
-const course = COURSES[key];
+const item = productOf(key);
 const STATUS = { pending: "Being checked", approved: "Approved", rejected: "Rejected, check the ID and submit again" };
 
 async function showHistory(uid) {
@@ -60,18 +61,20 @@ async function start() {
   if (!configured) return location.replace("login.html");
   const { data: { session } } = await sb.auth.getSession();
   if (!session) return location.replace("login.html");
-  if (!course) return location.replace("dashboard.html");
+  if (!item) return location.replace("dashboard.html");
   const uid = session.user.id;
-  const money = course.price.toLocaleString("en-US") + " RWF";
+  const money = formatPrice(item.price);
 
-  $("title").textContent = "Unlock the " + course.title;
-  $("price").textContent = money + ", one payment, yours for good";
+  $("title").textContent = item.kind === "course" ? "Unlock the " + item.title : "Pay for " + item.title;
+  $("price").textContent = item.kind === "course" ? money + ", one payment, yours for good" : money;
   $("amount").textContent = money;
   $("code").textContent = MOMO.code;
   $("momoName").textContent = MOMO.name;
   $("card").style.visibility = "visible";
 
-  const own = await sb.from("entitlements").select("course").eq("user_id", uid).eq("course", key);
+  const own = item.kind === "course"
+    ? await sb.from("entitlements").select("course").eq("user_id", uid).eq("course", key)
+    : { data: [] };
   if (own.data && own.data.length) { $("pay").hidden = true; $("owned").hidden = false; return; }
   showHistory(uid);
 
@@ -84,7 +87,7 @@ async function start() {
     $("go").disabled = true;
     say("Sending...", "ok");
     const { error } = await sb.from("payments")
-      .insert({ user_id: uid, course: key, amount: course.price, phone, txn_id: txn });
+      .insert({ user_id: uid, course: key, amount: item.price, phone, txn_id: txn });
     $("go").disabled = false;
     if (error) return say(error.code === "23505" ? "This transaction ID was already used." : "Could not send. Please try again.", "err");
     say("Thank you! We are checking your payment.", "ok");

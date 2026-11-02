@@ -6,7 +6,7 @@ export const MOMO = {
 };
 
 export const COURSES = {
-  html: { title: "HTML course",       price: 5000, first: 1,  last: 8  },
+  html: { title: "HTML course",       price: 1000, first: 1,  last: 8  },
   css:  { title: "CSS course",        price: 5000, first: 9,  last: 17 },
   js:   { title: "JavaScript course", price: 8000, first: 18, last: 27 }
 };
